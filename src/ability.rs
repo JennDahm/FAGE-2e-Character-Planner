@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+//! Abilities and ability focuses
 
 use strum::{EnumIter, IntoEnumIterator};
 
@@ -368,4 +369,69 @@ pub enum FocusLevel {
 
     /// Two levels of investment.
     DoubleFocus,
+}
+
+/// A container for ability scores.
+#[derive(Debug, Copy, Clone)]
+pub struct AbilityScores {
+    accuracy: i8,
+    communication: i8,
+    constitution: i8,
+    dexterity: i8,
+    fighting: i8,
+    intelligence: i8,
+    perception: i8,
+    strength: i8,
+    willpower: i8,
+}
+
+impl AbilityScores {
+    pub fn new() -> AbilityScores {
+        AbilityScores {
+            accuracy: 0,
+            communication: 0,
+            constitution: 0,
+            dexterity: 0,
+            fighting: 0,
+            intelligence: 0,
+            perception: 0,
+            strength: 0,
+            willpower: 0,
+        }
+    }
+
+    /// Get the specified ability score.
+    pub fn get(&self, ability: Ability) -> i8 {
+        match ability {
+            Ability::Accuracy => self.accuracy,
+            Ability::Communication => self.communication,
+            Ability::Constitution => self.constitution,
+            Ability::Dexterity => self.dexterity,
+            Ability::Fighting => self.fighting,
+            Ability::Intelligence => self.intelligence,
+            Ability::Perception => self.perception,
+            Ability::Strength => self.strength,
+            Ability::Willpower => self.willpower,
+        }
+    }
+
+    /// Get a mutable reference to the specified ability score.
+    pub fn get_mut(&mut self, ability: Ability) -> &mut i8 {
+        match ability {
+            Ability::Accuracy => &mut self.accuracy,
+            Ability::Communication => &mut self.communication,
+            Ability::Constitution => &mut self.constitution,
+            Ability::Dexterity => &mut self.dexterity,
+            Ability::Fighting => &mut self.fighting,
+            Ability::Intelligence => &mut self.intelligence,
+            Ability::Perception => &mut self.perception,
+            Ability::Strength => &mut self.strength,
+            Ability::Willpower => &mut self.willpower,
+        }
+    }
+
+    /// Set the specified ability score.
+    pub fn set(&mut self, ability: Ability, score: i8) {
+        *self.get_mut(ability) = score;
+    }
 }

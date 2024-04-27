@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+//! Weapons and weapon groups
 
 use strum::{EnumIter, IntoEnumIterator};
 
