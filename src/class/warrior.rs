@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 //! Various details about the Warrior class.
 
-use crate::{Ability, Advancement, LeafNodeAdvancement, WeaponGroup};
+use crate::{Ability, Advancement, Character, LeafNodeAdvancement, WeaponGroup};
 
 pub static PRIMARY_ABILITIES: [Ability; 4] = [
     Ability::Constitution, Ability::Dexterity, Ability::Fighting, Ability::Strength,
@@ -19,7 +19,7 @@ pub struct Level1Selections {
 
 /// This top-level advancement doesn't itself have any logic, but it has sub-advancements.
 impl Advancement for Level1Selections {
-    fn apply_self(&self, _: &mut crate::character::Character) -> Result<bool, ()> {
+    fn apply_self(&self, _: &mut Character) -> Result<bool, ()> {
         Ok(true)
     }
 
@@ -56,7 +56,7 @@ pub struct WeaponGroupSelection {
 }
 
 impl LeafNodeAdvancement for WeaponGroupSelection {
-    fn apply(&self, char: &mut crate::character::Character) -> Result<bool, ()> {
+    fn apply(&self, char: &mut Character) -> Result<bool, ()> {
         // Add common weapon group training.
         for weapon_group in [WeaponGroup::Brawling] {
             char.mechanical_properties.weapon_training.insert(weapon_group);

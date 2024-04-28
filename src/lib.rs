@@ -1,7 +1,7 @@
 mod ability;
 mod advancement;
-pub mod character;
-mod character_creation;
+mod character;
+pub mod character_creation;
 mod class;
 mod level;
 mod modifier;
@@ -10,6 +10,7 @@ mod weapon;
 
 pub use ability::*;
 pub use advancement::*;
+pub use character::*;
 pub use class::*;
 pub use modifier::*;
 pub use numbers::*;

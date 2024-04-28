@@ -3,7 +3,7 @@
 
 use std::cmp::max;
 
-use crate::{character::Character, Ability, Focus, FocusLevel};
+use crate::{Character, Ability, Focus, FocusLevel};
 
 /// A generic character advancement.
 ///

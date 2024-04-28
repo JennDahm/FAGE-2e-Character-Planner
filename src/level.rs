@@ -1,8 +1,7 @@
 #![allow(dead_code)]
 
-use crate::{Advancement, Class, DiceBasedHealthAdvancement};
+use crate::{Advancement, Character, Class, DiceBasedHealthAdvancement};
 use crate::{envoy, mage, rogue, warrior};
-use crate::character::Character;
 use crate::character_creation::AbilityDetermination;
 
 /// All Level 1 advancements.

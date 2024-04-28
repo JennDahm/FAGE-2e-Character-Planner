@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 //! Advancements specifically related to character creation.
 
-use crate::{character::Character, Ability, AbilityScore, Advancement, LeafNodeAdvancement, WeaponGroup};
+use crate::{Character, Ability, AbilityScore, Advancement, LeafNodeAdvancement, WeaponGroup};
 
 /// The player has chosen to select their abilities manually.
 ///
