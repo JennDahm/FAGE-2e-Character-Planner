@@ -6,6 +6,7 @@ use std::collections::HashMap;
 use super::{
     Ability,
     AbilityScores,
+    Class,
     Focus,
     FocusLevel,
     Weapon,
@@ -35,7 +36,9 @@ pub struct CharacterMechanicalProperties {
     pub level: u8,
 
     // TODO: race
-    // TODO: class
+
+    /// The character's class, if they've selected one.
+    pub class: Option<Class>,
 
     /// The character's ability scores.
     pub abilities: AbilityScores,
@@ -111,6 +114,7 @@ impl Character {
             },
             mechanical_properties: CharacterMechanicalProperties {
                 level: 1,
+                class: None,
                 abilities: AbilityScores::new(),
                 focuses: HashMap::new(),
                 weapon_training: Vec::new(),
