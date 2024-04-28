@@ -102,7 +102,6 @@ impl Advancement for AbilityDetermination {
 ///
 /// Arguments:
 /// * char: The character to apply the user's selection to.
-/// * always_apply: The weapon group training to always apply.
 /// * choose_between: The valid weapon group selections.
 /// * choices: The user's choices.
 ///
@@ -112,21 +111,10 @@ impl Advancement for AbilityDetermination {
 /// * Err() if the user made invalid selections.
 pub fn apply_initial_weapon_group_selection(
     char: &mut Character,
-    always_apply: &[WeaponGroup],
     choose_between: &[WeaponGroup],
     choices: &[Option<WeaponGroup>],
 ) -> Result<bool, ()> {
-    // Start by applying the "always apply" groups.
-    let training = &mut char.mechanical_properties.weapon_training;
-    for weapon_group in always_apply {
-        // It's not an error if the character is already trained in this.
-        if training.contains(&weapon_group) {
-            continue;
-        }
-        training.push(*weapon_group);
-    }
-
-    // Now apply the player's choices, keeping track of whether there were any unselected
+    // Apply the player's choices, keeping track of whether there were any unselected
     // choices.
     let mut any_unselected = false;
     for maybe_weapon_group in choices {
@@ -134,15 +122,11 @@ pub fn apply_initial_weapon_group_selection(
             None => {any_unselected = true; continue; },
             Some(w) => w,
         };
-        // It *is* an error if the user selects something outside the valid selection set.
+        // It's an error if the user selects something outside the valid selection set.
         if !choose_between.contains(&weapon_group) {
             return Err(());
         }
-        // It's weird, but not an error if the character is already trained in this.
-        if training.contains(&weapon_group) {
-            continue;
-        }
-        training.push(*weapon_group);
+        char.mechanical_properties.weapon_training.insert(*weapon_group);
     }
 
     return Ok(!any_unselected);

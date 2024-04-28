@@ -1,9 +1,9 @@
 #![allow(dead_code)]
 //! All information about a character, including their scores, stats, and equipment.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
-use super::{
+use crate::{
     Ability,
     AbilityScores,
     Class,
@@ -47,7 +47,7 @@ pub struct CharacterMechanicalProperties {
     pub focuses: HashMap<Focus, FocusLevel>,
 
     /// What weapons the character is trained in.
-    pub weapon_training: Vec<WeaponGroup>,
+    pub weapon_training: HashSet<WeaponGroup>,
 
     /// The character's base speed in yards.
     pub base_speed_yards: u8,
@@ -117,7 +117,7 @@ impl Character {
                 class: None,
                 abilities: AbilityScores::new(),
                 focuses: HashMap::new(),
-                weapon_training: Vec::new(),
+                weapon_training: HashSet::new(),
                 base_speed_yards: 0,
                 base_defense: 10,
                 base_armor: 0,

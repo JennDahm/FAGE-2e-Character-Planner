@@ -34,7 +34,6 @@ impl Advancement for Level1Selections {
     fn as_any(&self) -> &dyn std::any::Any { self }
 }
 
-pub static STARTING_WEAPON_GROUPS_ALWAYS: &'static [WeaponGroup] = &[WeaponGroup::Brawling];
 pub static STARTING_WEAPON_GROUPS_CHOICE_BETWEEN: &'static [WeaponGroup] = &[
     WeaponGroup::Axes,
     WeaponGroup::BlackPowder,
@@ -58,9 +57,14 @@ pub struct WeaponGroupSelection {
 
 impl LeafNodeAdvancement for WeaponGroupSelection {
     fn apply(&self, char: &mut crate::character::Character) -> Result<bool, ()> {
+        // Add common weapon group training.
+        for weapon_group in [WeaponGroup::Brawling] {
+            char.mechanical_properties.weapon_training.insert(weapon_group);
+        }
+
+        // Register the user's additional choices.
         crate::character_creation::apply_initial_weapon_group_selection(
             char,
-            &STARTING_WEAPON_GROUPS_ALWAYS,
             &STARTING_WEAPON_GROUPS_CHOICE_BETWEEN,
             &self.choices,
         )

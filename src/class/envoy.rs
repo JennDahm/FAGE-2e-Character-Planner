@@ -37,7 +37,6 @@ impl Advancement for Level1Selections {
     fn as_any(&self) -> &dyn std::any::Any { self }
 }
 
-pub static STARTING_WEAPON_GROUPS_ALWAYS: &'static [WeaponGroup] = &[];
 pub static STARTING_WEAPON_GROUPS_CHOICE_BETWEEN: &'static [WeaponGroup] = &[
     WeaponGroup::BlackPowder,
     WeaponGroup::Bludgeons,
@@ -57,9 +56,11 @@ pub struct WeaponGroupSelection {
 
 impl LeafNodeAdvancement for WeaponGroupSelection {
     fn apply(&self, char: &mut crate::character::Character) -> Result<bool, ()> {
+        // This class doesn't have any common weapon group training.
+
+        // Register the user's additional choices.
         crate::character_creation::apply_initial_weapon_group_selection(
             char,
-            &STARTING_WEAPON_GROUPS_ALWAYS,
             &STARTING_WEAPON_GROUPS_CHOICE_BETWEEN,
             &self.choices,
         )
