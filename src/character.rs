@@ -113,7 +113,7 @@ impl Character {
                 backstory: None,
             },
             mechanical_properties: CharacterMechanicalProperties {
-                level: 1,
+                level: 0,
                 class: None,
                 abilities: AbilityScores::new(),
                 focuses: HashMap::new(),

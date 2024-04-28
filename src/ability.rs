@@ -456,7 +456,7 @@ impl std::ops::SubAssign<i8> for AbilityScore {
 }
 
 /// A container for ability scores.
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Clone)]
 pub struct AbilityScores {
     accuracy: AbilityScore,
     communication: AbilityScore,
