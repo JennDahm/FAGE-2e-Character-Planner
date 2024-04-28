@@ -65,22 +65,6 @@ pub struct CharacterMechanicalProperties {
     // TODO: Spells
 }
 
-impl CharacterMechanicalProperties {
-    /// Creates a new character at level 1 with zeroed out stats.
-    pub fn new() -> CharacterMechanicalProperties {
-        CharacterMechanicalProperties {
-            level: 1,
-            abilities: AbilityScores::new(),
-            focuses: HashMap::new(),
-            weapon_training: Vec::new(),
-            base_speed_yards: 0,
-            base_defense: 0,
-            base_armor: 0,
-            max_health: 0,
-        }
-    }
-}
-
 /// The character's equipment.
 #[derive(Debug, Clone)]
 pub struct CharacterEquipment {
@@ -116,6 +100,35 @@ pub struct Character {
 }
 
 impl Character {
+    /// Starts the character building process.
+    pub fn new() -> Character {
+        Character {
+            flavor: CharacterFlavor {
+                name: String::new(),
+                background: None,
+                social_class: None,
+                backstory: None,
+            },
+            mechanical_properties: CharacterMechanicalProperties {
+                level: 1,
+                abilities: AbilityScores::new(),
+                focuses: HashMap::new(),
+                weapon_training: Vec::new(),
+                base_speed_yards: 0,
+                base_defense: 10,
+                base_armor: 0,
+                max_health: 0,
+            },
+            equipment: CharacterEquipment {
+                weapons: Vec::new(),
+            },
+            status: CharacterStatus {
+                exp: 0,
+                health: 0,
+            },
+        }
+    }
+
     /// The modifiers that go into the character's move speed.
     pub fn speed_value(&self) -> Value {
         // Per Chapter 1, Step 7 (Defense and Speed), speed is:
@@ -127,7 +140,7 @@ impl Character {
                 override_: None,
                 additive: vec![
                     AdditiveModifier {
-                        value: self.mechanical_properties.abilities.get(Ability::Dexterity),
+                        value: self.mechanical_properties.abilities.get(Ability::Dexterity).score,
                         source: ModifierSource::Ability(Ability::Dexterity),
                     },
                 ],
@@ -166,7 +179,7 @@ impl Character {
                 override_: None,
                 additive: vec![
                     AdditiveModifier {
-                        value: self.mechanical_properties.abilities.get(Ability::Dexterity),
+                        value: self.mechanical_properties.abilities.get(Ability::Dexterity).score,
                         source: ModifierSource::Ability(Ability::Dexterity),
                     },
                 ],

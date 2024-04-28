@@ -371,37 +371,121 @@ pub enum FocusLevel {
     DoubleFocus,
 }
 
+/// An individual ability score, keeping track of partial advancements.
+///
+/// This class supports adding advancements directly using + or -, and this handles
+/// partial advancements for you.
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
+pub struct AbilityScore {
+    pub score: i8,
+    pub partial: i8,
+}
+
+impl std::fmt::Display for AbilityScore {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.score)?;
+        for _ in 1..=self.partial {
+            write!(f, "+")?;
+        }
+        std::fmt::Result::Ok(())
+    }
+}
+
+impl AbilityScore {
+    /// Accumulate partials into whole scores where possible.
+    ///
+    /// How many advancements you need to invest in a score to increase it varies by level.
+    /// The "Ability Advancement Table" in Chapter 1/Classes/Level Advancement defines these
+    /// levels.
+    fn settle_partials(&mut self) {
+        // Handle negative partials (removing ability scores).
+        while self.partial < 0 {
+            self.partial += match self.score {
+                9.. => 3,
+                6..=8 => 2,
+                ..=5 => 1,
+            };
+            self.score -= 1;
+        }
+        // Handle positive partials (adding ability scores).
+        while self.partial > 0 {
+            let threshold = match self.score + 1 {
+                9.. => 3,
+                6..=8 => 2,
+                ..=5 => 1,
+            };
+            if self.partial < threshold {
+                break;
+            }
+            self.partial -= threshold;
+            self.score += 1;
+        }
+    }
+}
+
+impl std::ops::Add<i8> for AbilityScore {
+    type Output = Self;
+
+    fn add(mut self, rhs: i8) -> Self::Output {
+        self.partial += rhs;
+        self.settle_partials();
+        self
+    }
+}
+
+impl std::ops::AddAssign<i8> for AbilityScore {
+    fn add_assign(&mut self, rhs: i8) {
+        *self = *self + rhs;
+    }
+}
+
+impl std::ops::Sub<i8> for AbilityScore {
+    type Output = Self;
+
+    fn sub(mut self, rhs: i8) -> Self::Output {
+        self.partial -= rhs;
+        self.settle_partials();
+        self
+    }
+}
+
+impl std::ops::SubAssign<i8> for AbilityScore {
+    fn sub_assign(&mut self, rhs: i8) {
+        *self = *self - rhs;
+    }
+}
+
 /// A container for ability scores.
 #[derive(Debug, Copy, Clone)]
 pub struct AbilityScores {
-    accuracy: i8,
-    communication: i8,
-    constitution: i8,
-    dexterity: i8,
-    fighting: i8,
-    intelligence: i8,
-    perception: i8,
-    strength: i8,
-    willpower: i8,
+    accuracy: AbilityScore,
+    communication: AbilityScore,
+    constitution: AbilityScore,
+    dexterity: AbilityScore,
+    fighting: AbilityScore,
+    intelligence: AbilityScore,
+    perception: AbilityScore,
+    strength: AbilityScore,
+    willpower: AbilityScore,
 }
 
 impl AbilityScores {
     pub fn new() -> AbilityScores {
         AbilityScores {
-            accuracy: 0,
-            communication: 0,
-            constitution: 0,
-            dexterity: 0,
-            fighting: 0,
-            intelligence: 0,
-            perception: 0,
-            strength: 0,
-            willpower: 0,
+            accuracy: AbilityScore { score: 0, partial: 0 },
+            communication: AbilityScore { score: 0, partial: 0 },
+            constitution: AbilityScore { score: 0, partial: 0 },
+            dexterity: AbilityScore { score: 0, partial: 0 },
+            fighting: AbilityScore { score: 0, partial: 0 },
+            intelligence: AbilityScore { score: 0, partial: 0 },
+            perception: AbilityScore { score: 0, partial: 0 },
+            strength: AbilityScore { score: 0, partial: 0 },
+            willpower: AbilityScore { score: 0, partial: 0 },
         }
     }
 
     /// Get the specified ability score.
-    pub fn get(&self, ability: Ability) -> i8 {
+    pub fn get(&self, ability: Ability) -> AbilityScore {
         match ability {
             Ability::Accuracy => self.accuracy,
             Ability::Communication => self.communication,
@@ -416,7 +500,7 @@ impl AbilityScores {
     }
 
     /// Get a mutable reference to the specified ability score.
-    pub fn get_mut(&mut self, ability: Ability) -> &mut i8 {
+    pub fn get_mut(&mut self, ability: Ability) -> &mut AbilityScore {
         match ability {
             Ability::Accuracy => &mut self.accuracy,
             Ability::Communication => &mut self.communication,
@@ -431,7 +515,7 @@ impl AbilityScores {
     }
 
     /// Set the specified ability score.
-    pub fn set(&mut self, ability: Ability, score: i8) {
+    pub fn set(&mut self, ability: Ability, score: AbilityScore) {
         *self.get_mut(ability) = score;
     }
 }
