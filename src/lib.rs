@@ -3,7 +3,7 @@ mod advancement;
 mod character;
 pub mod character_creation;
 mod class;
-mod level;
+pub mod level;
 mod modifier;
 mod numbers;
 mod weapon;
