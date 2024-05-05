@@ -1,6 +1,7 @@
 [package]
 name = "fage2e-gui"
 version = "0.1.0"
+authors = ["Jennifer Dahm <jennifer.carol.dahm@gmail.com>"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -8,3 +9,14 @@ edition = "2021"
 [dependencies]
 fage2e = { path = "../fage2e" }
 strum = { version = "0.26.2", features = ["derive"] }
+dioxus = { version = "0.5", features = ["web", "router"] }
+
+# Debug
+tracing = "0.1.40"
+dioxus-logger = "0.5.0"
+
+[lib]
+
+[[bin]]
+name = "fage2e-gui"
+path = "src/main.rs"

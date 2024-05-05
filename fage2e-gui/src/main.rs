@@ -1,12 +1,11 @@
-use strum::IntoEnumIterator;
+use dioxus::prelude::*;
+use tracing::Level;
 
-use fage2e;
+use fage2e_gui::App;
+
 
 fn main() {
-    for ability in fage2e::Ability::iter() {
-        println!("{}:", ability);
-        for focus in ability.focuses() {
-            println!("\t{}", focus.base_name());
-        }
-    }
+    // Init logger
+    dioxus_logger::init(Level::INFO).expect("failed to init logger");
+    launch(App);
 }
