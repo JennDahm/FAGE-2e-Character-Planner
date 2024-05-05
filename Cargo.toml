@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "fage2e",
+    "fage2e-gui",
+]
+resolver = "2"

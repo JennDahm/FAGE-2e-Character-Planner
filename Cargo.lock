@@ -10,6 +10,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "fage2e-gui"
+version = "0.1.0"
+dependencies = [
+ "fage2e",
+ "strum",
+]
+
+[[package]]
 name = "heck"
 version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
