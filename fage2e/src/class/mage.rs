@@ -13,6 +13,7 @@ pub static SECONDARY_ABILITIES: [Ability; 5] = [
 pub static STARTING_HEALTH: u8 = 20;
 
 /// The initial selections the user must make for this class.
+#[derive(Debug, Clone, Default)]
 pub struct Level1Selections {
     weapon_groups: WeaponGroupSelection,
 }
@@ -35,6 +36,7 @@ impl Advancement for Level1Selections {
 }
 
 /// The initial weapon group selection for this class.
+#[derive(Debug, Clone, Default)]
 pub struct WeaponGroupSelection {
 }
 

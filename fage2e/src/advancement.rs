@@ -91,6 +91,7 @@ impl<T: LeafNodeAdvancement + 'static> Advancement for T {
 }
 
 /// An incremental advance on the character's base defense.
+#[derive(Debug, Clone, Default)]
 pub struct DefenseAdvancement {
     // There's not a choice for the user to make here.
 }
@@ -104,6 +105,7 @@ impl LeafNodeAdvancement for DefenseAdvancement {
 
 
 /// An incremental advance on the character's health that includes a dice roll.
+#[derive(Debug, Clone, Default)]
 pub struct DiceBasedHealthAdvancement {
     /// The raw dice roll result, if it's been decided yet.
     /// This does not include constitution modifiers.
@@ -129,6 +131,7 @@ impl LeafNodeAdvancement for DiceBasedHealthAdvancement {
 }
 
 /// An incremental advance on the character's health based solely on the character's Constitution.
+#[derive(Debug, Clone, Default)]
 pub struct ConstitutionBasedHealthAdvancement {
     // There's not a choice for the user to make here.
 }
@@ -144,6 +147,7 @@ impl LeafNodeAdvancement for ConstitutionBasedHealthAdvancement {
 
 
 /// An incremental advancement on a single primary ability score.
+#[derive(Debug, Clone, Default)]
 pub struct PrimaryAbilityAdvancement {
     /// Which ability to advance, or None if not selected yet.
     pub ability: Option<Ability>,
@@ -172,6 +176,7 @@ impl LeafNodeAdvancement for PrimaryAbilityAdvancement {
 }
 
 /// An incremental advancement on a single secondary ability score.
+#[derive(Debug, Clone, Default)]
 pub struct SecondaryAbilityAdvancement {
     /// Which ability to advance, or None if not selected yet.
     pub ability: Option<Ability>,
@@ -225,6 +230,7 @@ fn advance_focus(char: &mut Character, focus: Focus) -> Result<(), ()> {
 
 
 /// An opportunity to pick a new focus or double-up on an already-taken focus in a primary ability.
+#[derive(Debug, Clone, Default)]
 pub struct PrimaryFocusAdvancement {
     /// Which focus to take or advance.
     pub focus: Option<Focus>,
@@ -253,6 +259,7 @@ impl LeafNodeAdvancement for PrimaryFocusAdvancement {
 }
 
 /// An opportunity to pick a new focus or double-up on an already-taken focus in a secondary ability.
+#[derive(Debug, Clone, Default)]
 pub struct SecondaryFocusAdvancement {
     /// Which focus to take or advance.
     pub focus: Option<Focus>,
@@ -282,17 +289,20 @@ impl LeafNodeAdvancement for SecondaryFocusAdvancement {
 
 
 /// An opportunity to pick a new stunt ability.
+#[derive(Debug, Clone, Default)]
 pub struct StuntAdvancement {
     // TODO: Option<Stunt>
 }
 
 /// An opportunity to pick a new out-of-class (or in-class) stunt ability.
+#[derive(Debug, Clone, Default)]
 pub struct OutOfClassStuntAdvancement {
     // TODO: Option<Stunt>
 }
 
 
 /// An opportunity to pick a new talent or advance an already-taken one.
+#[derive(Debug, Clone, Default)]
 pub struct TalentAdvancement {
     // TODO: Option<Talent>
 }
@@ -301,6 +311,7 @@ pub struct TalentAdvancement {
 /// An opportunity to pick a new specialization or advance an already-taken one.
 ///
 /// Alternatively, you can take a regular talent, with some restrictions.
+#[derive(Debug, Clone, Default)]
 pub struct SpecializationAdvancement {
     // TODO: Option<Specialization>
     // TODO: Option<Talent>

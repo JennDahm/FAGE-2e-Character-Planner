@@ -3,9 +3,24 @@
 
 use crate::{Character, Ability, AbilityScore, Advancement, LeafNodeAdvancement, WeaponGroup};
 
+/// Character name selection
+#[derive(Debug, Clone, Default)]
+pub struct SelectName
+{
+    pub name: String,
+}
+
+impl LeafNodeAdvancement for SelectName {
+    fn apply(&self, char: &mut Character) -> Result<bool, ()> {
+        char.flavor.name = self.name.clone();
+        Ok(!self.name.is_empty())
+    }
+}
+
 /// The player has chosen to select their abilities manually.
 ///
 /// They will have 13 advancements they can make, but cannot advance anything past 3.
+#[derive(Debug, Clone, Default)]
 pub struct SelectAbilities {
     pub advancements: [Option<Ability>; 13],
 }
@@ -32,16 +47,17 @@ impl LeafNodeAdvancement for SelectAbilities {
 /// The player has chosen to manually enter their abilities that they determined outside this program.
 ///
 /// These will not be validated.
+#[derive(Debug, Clone, Default)]
 pub struct ManuallyEnterAbilities {
-    accuracy: i8,
-    communication: i8,
-    constitution: i8,
-    dexterity: i8,
-    fighting: i8,
-    intelligence: i8,
-    perception: i8,
-    strength: i8,
-    willpower: i8,
+    pub accuracy: i8,
+    pub communication: i8,
+    pub constitution: i8,
+    pub dexterity: i8,
+    pub fighting: i8,
+    pub intelligence: i8,
+    pub perception: i8,
+    pub strength: i8,
+    pub willpower: i8,
 }
 
 impl LeafNodeAdvancement for ManuallyEnterAbilities {
@@ -61,7 +77,9 @@ impl LeafNodeAdvancement for ManuallyEnterAbilities {
 }
 
 /// The player has different choices for how to determine their starting abilities.
+#[derive(Debug, Clone, Default)]
 pub enum AbilityDetermination {
+    #[default]
     NoChoice,
     Select(SelectAbilities),
     // TODO: Dice-roll based method.

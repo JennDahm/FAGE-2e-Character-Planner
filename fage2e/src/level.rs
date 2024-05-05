@@ -2,11 +2,14 @@
 
 use crate::{Advancement, Character, Class, DiceBasedHealthAdvancement};
 use crate::{envoy, mage, rogue, warrior};
-use crate::character_creation::AbilityDetermination;
+use crate::{AbilityDetermination, SelectName};
 
 /// All Level 1 advancements.
+#[derive(Debug, Clone, Default)]
 pub struct Level1 {
-    abilities: AbilityDetermination,
+    pub name: SelectName,
+
+    pub abilities: AbilityDetermination,
 
     // TODO: Ancestry
     // TODO: Background?
@@ -20,10 +23,10 @@ pub struct Level1 {
     // * Starting equipment.
     //
     // All of these are based on class selection.
-    class: Level1ClassSelections,
+    pub class: Level1ClassSelections,
 
     // Level1ClassSelections handles base health; this handles the health on top of that.
-    health: DiceBasedHealthAdvancement,
+    pub health: DiceBasedHealthAdvancement,
 }
 
 /// The "Advancement" part of Level 1 just sets the player's level.
@@ -35,12 +38,14 @@ impl Advancement for Level1 {
     }
 
     fn foreach(&self, f: &mut dyn FnMut(&dyn Advancement)) {
+        f(&self.name);
         f(&self.abilities);
         f(&self.class);
         f(&self.health);
     }
 
     fn foreach_mut(&mut self, f: &mut dyn FnMut(&mut dyn Advancement)) {
+        f(&mut self.name);
         f(&mut self.abilities);
         f(&mut self.class);
         f(&mut self.health);
@@ -51,7 +56,9 @@ impl Advancement for Level1 {
 
 
 /// The player must choose their class, which comes with additional choices.
+#[derive(Debug, Clone, Default)]
 pub enum Level1ClassSelections {
+    #[default]
     NoChoice,
     Envoy(envoy::Level1Selections),
     Mage(mage::Level1Selections),

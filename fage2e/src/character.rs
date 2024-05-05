@@ -18,7 +18,7 @@ use crate::{
 };
 
 /// Non-mechanical properties of a character.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct CharacterFlavor {
     pub name: String,
 
@@ -30,7 +30,7 @@ pub struct CharacterFlavor {
 }
 
 /// Mechanical properties of a character.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct CharacterMechanicalProperties {
     /// The character's level. Valid values are 1-20.
     pub level: u8,
@@ -69,7 +69,7 @@ pub struct CharacterMechanicalProperties {
 }
 
 /// The character's equipment.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct CharacterEquipment {
     /// The character's weapon cache.
     pub weapons: Vec<Weapon>,
@@ -79,7 +79,7 @@ pub struct CharacterEquipment {
 }
 
 /// On-going stats about a character.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct CharacterStatus {
     /// The character's current number of experience points.
     pub exp: u32,
@@ -94,7 +94,7 @@ pub struct CharacterStatus {
 }
 
 /// A full character description.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Character {
     pub flavor: CharacterFlavor,
     pub mechanical_properties: CharacterMechanicalProperties,

@@ -13,6 +13,7 @@ pub static SECONDARY_ABILITIES: [Ability; 5] = [
 pub static STARTING_HEALTH: u8 = 25;
 
 /// The initial selections the user must make for this class.
+#[derive(Debug, Clone, Default)]
 pub struct Level1Selections {
     weapon_groups: WeaponGroupSelection,
     // TODO: Level 1 powers
@@ -50,6 +51,7 @@ pub static STARTING_WEAPON_GROUPS_CHOICE_BETWEEN: &'static [WeaponGroup] = &[
 pub const STARTING_WEAPON_GROUPS_NUM_CHOICES: usize = 3;
 
 /// The initial weapon group selection for this class.
+#[derive(Debug, Clone, Default)]
 pub struct WeaponGroupSelection {
     choices: [Option<WeaponGroup>; STARTING_WEAPON_GROUPS_NUM_CHOICES],
 }
