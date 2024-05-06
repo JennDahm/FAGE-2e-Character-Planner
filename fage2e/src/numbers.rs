@@ -1,6 +1,10 @@
 #![allow(dead_code)]
 
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
+
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[allow(non_camel_case_types)]
 pub enum Dice {
     d6(u8),
@@ -38,6 +42,7 @@ impl std::fmt::Display for Dice {
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct DiceWithMod {
     pub dice: Dice,
     pub modifier: i8

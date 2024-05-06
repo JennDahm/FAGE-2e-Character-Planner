@@ -3,10 +3,14 @@
 
 use strum::{EnumIter, IntoEnumIterator};
 
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
+
 use super::ability::{Ability, Focus};
 use super::numbers::{Dice, DiceWithMod};
 
 #[derive(Debug, Copy, Clone, EnumIter, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum WeaponGroup {
     Axes,
     BlackPowder,
@@ -84,6 +88,7 @@ impl std::fmt::Display for WeaponGroup {
 }
 
 #[derive(Debug, Copy, Clone, EnumIter, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum Weapon {
     // AXES
     BattleAxe,
@@ -623,6 +628,7 @@ impl std::fmt::Display for Weapon {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct WeaponProperties {
     pub damage: DiceWithMod,
     pub min_strength: Option<i8>,
@@ -632,6 +638,7 @@ pub struct WeaponProperties {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct WeaponMissileProperties {
     pub short_range_yards: u16,
     pub long_range_yards: Option<u16>,

@@ -1,6 +1,9 @@
 #![allow(dead_code)]
 //! Various details about the Warrior class.
 
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
+
 use crate::{Ability, Advancement, Character, LeafNodeAdvancement, WeaponGroup};
 
 pub static PRIMARY_ABILITIES: [Ability; 4] = [
@@ -14,6 +17,7 @@ pub static STARTING_HEALTH: u8 = 30;
 
 /// The initial selections the user must make for this class.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Level1Selections {
     weapon_groups: WeaponGroupSelection,
 }
@@ -53,6 +57,7 @@ pub const STARTING_WEAPON_GROUPS_NUM_CHOICES: usize = 4;
 
 /// The initial weapon group selection for this class.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct WeaponGroupSelection {
     choices: [Option<WeaponGroup>; STARTING_WEAPON_GROUPS_NUM_CHOICES],
 }

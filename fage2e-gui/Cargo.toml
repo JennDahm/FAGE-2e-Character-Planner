@@ -7,9 +7,10 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-fage2e = { path = "../fage2e" }
+fage2e = { path = "../fage2e", features = ["serde"] }
 strum = { version = "0.26.2", features = ["derive"] }
 dioxus = { version = "0.5", features = ["web", "router"] }
+serde_json = "1.0"
 
 # Debug
 tracing = "0.1.40"

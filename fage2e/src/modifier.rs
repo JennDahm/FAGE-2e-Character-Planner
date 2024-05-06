@@ -5,8 +5,12 @@
 
 use super::{Ability, Focus, Dice, DiceWithMod};
 
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
+
 /// The source of a modifier or override.
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum ModifierSource {
     Ability(Ability),
     Focus(Focus),
@@ -14,6 +18,7 @@ pub enum ModifierSource {
 
 /// A simple additive modifier and its source.
 #[derive(Debug, Copy, Clone)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct AdditiveModifier {
     /// The value of the modifier to add.
     pub value: i8,
@@ -24,6 +29,7 @@ pub struct AdditiveModifier {
 
 /// A set of modifiers to a dice roll or simple value and their sources.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct ModifierSet<T: std::fmt::Debug + Clone> {
     /// If specified, this overrides the base value/roll.
     pub override_: Option<T>,
@@ -36,6 +42,7 @@ pub struct ModifierSet<T: std::fmt::Debug + Clone> {
 
 /// A value with modifiers.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Value {
     /// The base value.
     pub base: i16,
@@ -60,6 +67,7 @@ impl Value {
 
 /// A dice roll with modifiers.
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct DiceRoll {
     /// The base dice roll and modifier.
     pub base: DiceWithMod,

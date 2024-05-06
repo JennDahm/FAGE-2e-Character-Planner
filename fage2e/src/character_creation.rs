@@ -1,10 +1,14 @@
 #![allow(dead_code)]
 //! Advancements specifically related to character creation.
 
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
+
 use crate::{Character, Ability, AbilityScore, Advancement, LeafNodeAdvancement, WeaponGroup};
 
 /// Character name selection
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct SelectName
 {
     pub name: String,
@@ -21,6 +25,7 @@ impl LeafNodeAdvancement for SelectName {
 ///
 /// They will have 13 advancements they can make, but cannot advance anything past 3.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct SelectAbilities {
     pub advancements: [Option<Ability>; 13],
 }
@@ -48,6 +53,7 @@ impl LeafNodeAdvancement for SelectAbilities {
 ///
 /// These will not be validated.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct ManuallyEnterAbilities {
     pub accuracy: i8,
     pub communication: i8,
@@ -78,6 +84,7 @@ impl LeafNodeAdvancement for ManuallyEnterAbilities {
 
 /// The player has different choices for how to determine their starting abilities.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum AbilityDetermination {
     #[default]
     NoChoice,

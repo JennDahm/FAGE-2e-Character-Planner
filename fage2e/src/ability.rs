@@ -3,7 +3,11 @@
 
 use strum::{EnumIter, IntoEnumIterator};
 
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
+
 #[derive(Debug, Copy, Clone, EnumIter, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum Ability {
     Accuracy,
     Communication,
@@ -45,6 +49,7 @@ impl std::fmt::Display for Ability {
 }
 
 #[derive(Debug, Copy, Clone, EnumIter, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum Focus {
     // ACCURACY
     AccuracyArcaneBlast,
@@ -360,6 +365,7 @@ impl std::fmt::Display for Focus {
 
 /// How much a character has invested in a particular focus.
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum FocusLevel {
     /// No investment at all.
     None,
@@ -376,6 +382,7 @@ pub enum FocusLevel {
 /// This class supports adding advancements directly using + or -, and this handles
 /// partial advancements for you.
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct AbilityScore {
     pub score: i8,
     pub partial: i8,
@@ -457,6 +464,7 @@ impl std::ops::SubAssign<i8> for AbilityScore {
 
 /// A container for ability scores.
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct AbilityScores {
     accuracy: AbilityScore,
     communication: AbilityScore,

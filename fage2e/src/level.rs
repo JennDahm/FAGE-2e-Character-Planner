@@ -1,11 +1,15 @@
 #![allow(dead_code)]
 
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
+
 use crate::{Advancement, Character, Class, DiceBasedHealthAdvancement};
 use crate::{envoy, mage, rogue, warrior};
 use crate::{AbilityDetermination, SelectName};
 
 /// All Level 1 advancements.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Level1 {
     pub name: SelectName,
 
@@ -57,6 +61,7 @@ impl Advancement for Level1 {
 
 /// The player must choose their class, which comes with additional choices.
 #[derive(Debug, Clone, Default)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum Level1ClassSelections {
     #[default]
     NoChoice,

@@ -706,6 +706,7 @@ dependencies = [
 name = "fage2e"
 version = "0.1.0"
 dependencies = [
+ "serde",
  "strum",
 ]
 
@@ -716,6 +717,7 @@ dependencies = [
  "dioxus",
  "dioxus-logger",
  "fage2e",
+ "serde_json",
  "strum",
  "tracing",
 ]

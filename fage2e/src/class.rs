@@ -2,6 +2,9 @@
 
 use strum::EnumIter;
 
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
+
 use crate::Ability;
 
 pub mod envoy;
@@ -10,6 +13,7 @@ pub mod rogue;
 pub mod warrior;
 
 #[derive(Debug, Copy, Clone, EnumIter, PartialEq, Eq, Hash)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum Class {
     Envoy,
     Mage,
