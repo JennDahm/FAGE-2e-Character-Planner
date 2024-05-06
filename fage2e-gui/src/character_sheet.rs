@@ -1,3 +1,5 @@
+use std::ops::Deref;
+
 use dioxus::prelude::*;
 
 use fage2e::*;
@@ -6,9 +8,11 @@ use strum::IntoEnumIterator;
 
 #[component]
 pub fn CharacterSheet(character: ReadOnlySignal<Character>) -> Element {
-    let character = character();
-    let bgrnd = character.flavor.background.unwrap_or("".to_owned());
-    let social_class = character.flavor.social_class.unwrap_or("".to_owned());
+    let character = character.read();
+    let character = character.deref();
+
+    let bgrnd = character.flavor.background.clone().unwrap_or("".to_owned());
+    let social_class = character.flavor.social_class.clone().unwrap_or("".to_owned());
     rsx! {
         div {
             class: "character-sheet",
@@ -27,11 +31,11 @@ pub fn CharacterSheet(character: ReadOnlySignal<Character>) -> Element {
                             class: "ability-name",
                             "{ability}"
                         }
-                        td {
+                        th {
                             class: "ability-score",
                             rowspan: "2",
                             title: "Hovering!", // Look, ma, hover text!
-                            "0"
+                            "{character.mechanical_properties.abilities.get(ability)}"
                         }
                     }
                     tr {

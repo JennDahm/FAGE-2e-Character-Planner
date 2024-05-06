@@ -30,7 +30,23 @@ body {
 
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+}
+
+.level-selector span {
+    text-align: center;
+    padding-left: 7px;
+    padding-right: 7px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.level-selector .selected {
+    background-color: #bbbbbb;
+}
+
+.level-selector .unselected:hover {
+    background-color: #cccccc;
 }
 
 .character-sheet .ability-table {
