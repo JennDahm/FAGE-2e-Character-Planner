@@ -15,8 +15,21 @@ pub fn Level1(character: ReadOnlySignal<fage2e::Character>, mut level1: Signal<f
     });
     use_effect(move || { (*level1.write()).name = name(); });
 
+    let abilities = use_signal(move || {
+        // TODO: Allow the ability to select ability determination style.
+        let level1 = level1.read();
+        let level1 = level1.deref();
+        match level1.abilities {
+            fage2e::AbilityDetermination::Manual(_) => level1.abilities.clone(),
+            _ => fage2e::AbilityDetermination::Manual(fage2e::ManuallyEnterAbilities::default()),
+        }
+    });
+    use_effect(move || { (*level1.write()).abilities = abilities(); });
+
     // Set up signals for the sub-advancement states.
     let mut name_status = use_signal(|| Result::<bool, ()>::Ok(false));
+    let mut abilities_status = use_signal(|| Result::<bool, ()>::Ok(false));
+
     // Set up an effect to update sub-advancement states.
     use_effect(move || {
         let mut character = character();
@@ -25,14 +38,17 @@ pub fn Level1(character: ReadOnlySignal<fage2e::Character>, mut level1: Signal<f
 
         let _ = level1.apply_self(&mut character);
         name_status.set(level1.name.apply_all(&mut character));
+        abilities_status.set(level1.abilities.apply_all(&mut character));
 
         info!("Updated level 1 info");
     });
 
     use crate::advancement::SelectName;
+    use crate::advancement::AbilityDetermination;
 
     rsx! {
-        h3 { "Level 1" }
+        h3 { class: "title", "Level 1" }
         SelectName { name }
+        AbilityDetermination { abilities }
     }
 }

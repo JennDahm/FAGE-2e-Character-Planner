@@ -63,7 +63,7 @@ pub fn CustomizerBar(mut character: Signal<fage2e::Character>) -> Element
             match level_select() {
                 1 => rsx! { Level1 { character: level0_character, level1 } },
                 _ => rsx! {
-                    h3 { "ERROR" }
+                    h3 { class: "title", "ERROR" }
                     p { "How did you select an invalid level?" }
                 },
             }
