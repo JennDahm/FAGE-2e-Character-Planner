@@ -3,6 +3,8 @@ use dioxus::prelude::*;
 use fage2e;
 use fage2e::Advancement;
 
+use crate::util::use_local_storage;
+
 /// Component managing the state of the character customizer side-bar.
 ///
 /// Args:
@@ -15,7 +17,13 @@ pub fn CustomizerBar(mut character: Signal<fage2e::Character>) -> Element
     // conditionals, so we have to hand-unroll this.
 
     // First: The signals for each level advancement.
-    let level1 = use_signal(|| fage2e::Level1::default());
+    //
+    // For user convenience, we store them in the browser's LocalStorage, but
+    // when operating on them within the app, it's more convenient to use a
+    // normal signal.
+    let mut level1_storage = use_local_storage("level1", fage2e::Level1::default);
+    let level1 = use_signal(move || level1_storage.get());
+    use_effect(move || level1_storage.set(level1()));
     // TODO: level2, etc.
 
     // Next: Signals indicating whether each level advancement is ok and/or fully filled out.

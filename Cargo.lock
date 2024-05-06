@@ -717,6 +717,8 @@ dependencies = [
  "dioxus",
  "dioxus-logger",
  "fage2e",
+ "gloo-storage 0.3.0",
+ "serde",
  "serde_json",
  "strum",
  "tracing",
@@ -870,7 +872,7 @@ dependencies = [
  "gloo-history",
  "gloo-net 0.3.1",
  "gloo-render",
- "gloo-storage",
+ "gloo-storage 0.2.2",
  "gloo-timers",
  "gloo-utils 0.1.7",
  "gloo-worker",
@@ -996,6 +998,21 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5d6ab60bf5dbfd6f0ed1f7843da31b41010515c745735c970e821945ca91e480"
 dependencies = [
  "gloo-utils 0.1.7",
+ "js-sys",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
+name = "gloo-storage"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fbc8031e8c92758af912f9bc08fbbadd3c6f3cfcbf6b64cdf3d6a81f0139277a"
+dependencies = [
+ "gloo-utils 0.2.0",
  "js-sys",
  "serde",
  "serde_json",
@@ -1974,9 +1991,9 @@ dependencies = [
 
 [[package]]
 name = "web-sys"
-version = "0.3.67"
+version = "0.3.69"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "58cd2333b6e0be7a39605f0e255892fd7418a682d8da8fe042fe25128794d2ed"
+checksum = "77afa9a11836342370f4817622a2f0f418b134426d91a82dfb48f532d2ec13ef"
 dependencies = [
  "js-sys",
  "wasm-bindgen",
