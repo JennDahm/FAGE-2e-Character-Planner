@@ -82,3 +82,24 @@ body {
     text-align: left;
     padding: 5px;
 }
+
+.hover-container {
+    position: relative;
+}
+
+.hover-content {
+    background-color: white;
+    border: 1px solid black;
+    padding-left: 3px;
+    padding-right: 3px;
+    font-weight: normal;
+
+    position: absolute;
+    top: 100%;
+    left: 100%;
+    display: none;
+}
+
+.hover-container:hover .hover-content {
+    display: block;
+}

@@ -28,8 +28,13 @@ pub fn CharacterSheet(character: ReadOnlySignal<Character>) -> Element {
                 for ability in Ability::iter() {
                     tr {
                         th {
-                            class: "ability-name",
+                            class: "ability-name hover-container",
                             "{ability}"
+                            // Different hover-text style that lets us actually style things.
+                            div {
+                                class: "hover-content",
+                                i { "Hello hover" }
+                            }
                         }
                         th {
                             class: "ability-score",
