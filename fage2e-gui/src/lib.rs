@@ -7,6 +7,7 @@ mod character_sheet;
 mod customizer_bar;
 mod level;
 mod util;
+mod widget;
 
 #[allow(non_snake_case)]
 pub fn App() -> Element {

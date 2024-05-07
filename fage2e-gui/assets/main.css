@@ -35,6 +35,34 @@ body {
     margin-block-end: 0.25em;
 }
 
+.customizer-bar .selector {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    width: 100%;
+}
+
+.customizer-bar .selector span {
+    text-align: center;
+    padding-left: 9px;
+    padding-right: 9px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin: 2px;
+
+    border: 1px solid #bbbbbb;
+    /* Dumb trick to get as big a circular radius as we can get. */
+    border-radius: 99999px;
+}
+
+.customizer-bar .selector .selected {
+    background-color: #bbbbbb;
+}
+
+.customizer-bar .selector .unselected:hover {
+    background-color: #cccccc;
+}
+
 .level-selector {
     border-right: 2px solid black;
     margin-right: 10px;

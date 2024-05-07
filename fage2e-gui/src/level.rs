@@ -10,9 +10,7 @@ use fage2e::Advancement;
 pub fn Level1(character: ReadOnlySignal<fage2e::Character>, mut level1: Signal<fage2e::Level1>) -> Element {
     // Set up signals for the sub-advancement values and effects to copy them back into
     // the level advancement.
-    let name = use_signal(move || {
-        (*level1.read()).name.clone()
-    });
+    let name = use_signal(move || { (*level1.read()).name.clone() });
     use_effect(move || { (*level1.write()).name = name(); });
 
     let abilities = use_signal(move || {
@@ -26,9 +24,13 @@ pub fn Level1(character: ReadOnlySignal<fage2e::Character>, mut level1: Signal<f
     });
     use_effect(move || { (*level1.write()).abilities = abilities(); });
 
+    let class_selections = use_signal(move || { (*level1.read()).class.clone() });
+    use_effect(move || { (*level1.write()).class = class_selections(); });
+
     // Set up signals for the sub-advancement states.
     let mut name_status = use_signal(|| Result::<bool, ()>::Ok(false));
     let mut abilities_status = use_signal(|| Result::<bool, ()>::Ok(false));
+    // TODO: Handle class selections...
 
     // Set up an effect to update sub-advancement states.
     use_effect(move || {
@@ -45,10 +47,12 @@ pub fn Level1(character: ReadOnlySignal<fage2e::Character>, mut level1: Signal<f
 
     use crate::advancement::SelectName;
     use crate::advancement::AbilityDetermination;
+    use crate::advancement::Level1ClassSelections;
 
     rsx! {
         h3 { class: "title", "Level 1" }
         SelectName { name }
         AbilityDetermination { abilities }
+        Level1ClassSelections { class_selections }
     }
 }
