@@ -4,7 +4,7 @@
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
-use crate::{Ability, Advancement, Character, LeafNodeAdvancement, WeaponGroup};
+use crate::{Ability, Advancement, Character, InitialWeaponGroups, WeaponGroup};
 
 pub static PRIMARY_ABILITIES: [Ability; 4] = [
     Ability::Accuracy, Ability::Communication, Ability::Dexterity, Ability::Perception,
@@ -19,7 +19,7 @@ pub static STARTING_HEALTH: u8 = 25;
 #[derive(Debug, Clone, Default)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Level1Selections {
-    weapon_groups: WeaponGroupSelection,
+    pub weapon_groups: WeaponGroupSelection,
 }
 
 /// This top-level advancement doesn't itself have any logic, but it has sub-advancements.
@@ -39,34 +39,48 @@ impl Advancement for Level1Selections {
     fn as_any(&self) -> &dyn std::any::Any { self }
 }
 
-pub static STARTING_WEAPON_GROUPS_CHOICE_BETWEEN: &'static [WeaponGroup] = &[
-    WeaponGroup::BlackPowder,
-    WeaponGroup::Bows,
-    WeaponGroup::Brawling,
-    WeaponGroup::Slings,
-    WeaponGroup::Dueling,
-];
 pub const STARTING_WEAPON_GROUPS_NUM_CHOICES: usize = 2;
 
 /// The initial weapon group selection for this class.
 #[derive(Debug, Clone, Default)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct WeaponGroupSelection {
-    choices: [Option<WeaponGroup>; STARTING_WEAPON_GROUPS_NUM_CHOICES],
+    pub choices_: [Option<WeaponGroup>; STARTING_WEAPON_GROUPS_NUM_CHOICES],
 }
 
-impl LeafNodeAdvancement for WeaponGroupSelection {
-    fn apply(&self, char: &mut Character) -> Result<bool, ()> {
-        // Add common weapon group training.
-        for weapon_group in [WeaponGroup::LightBlades, WeaponGroup::Staves] {
-            char.mechanical_properties.weapon_training.insert(weapon_group);
-        }
+impl InitialWeaponGroups for WeaponGroupSelection {
+    fn always_get() -> &'static [WeaponGroup] {
+        &[
+            WeaponGroup::LightBlades,
+            WeaponGroup::Staves,
+        ]
+    }
 
-        // Register the user's additional choices.
-        crate::character_creation::apply_initial_weapon_group_selection(
-            char,
-            &STARTING_WEAPON_GROUPS_CHOICE_BETWEEN,
-            &self.choices,
-        )
+    fn choose_between() -> &'static [WeaponGroup] {
+        &[
+            WeaponGroup::BlackPowder,
+            WeaponGroup::Bows,
+            WeaponGroup::Brawling,
+            WeaponGroup::Slings,
+            WeaponGroup::Dueling,
+        ]
+    }
+
+    fn num_choices() -> usize {
+        STARTING_WEAPON_GROUPS_NUM_CHOICES
+    }
+
+    fn choices(&self) -> &[Option<WeaponGroup>] {
+        &self.choices_
+    }
+
+    fn choices_mut(&mut self) -> &mut [Option<WeaponGroup>] {
+        &mut self.choices_
+    }
+}
+
+impl PartialEq for WeaponGroupSelection {
+    fn eq(&self, other: &Self) -> bool {
+        self.choices_ == other.choices_
     }
 }

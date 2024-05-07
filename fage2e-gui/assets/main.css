@@ -16,6 +16,11 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/**
+ * Customizer bar general styling
+ *
+ * @{
+ */
 .customizer-bar {
     border-right: 2px solid black;
     margin-right: 10px;
@@ -35,14 +40,27 @@ body {
     margin-block-end: 0.25em;
 }
 
-.customizer-bar .selector {
+.customizer-bar .label {
+    margin-block-start: 0.25em;
+    margin-block-end: 0.25em;
+}
+/**
+ * @}
+ */
+
+/**
+ * Selector/MultiSelector widget styling
+ *
+ * @{
+ */
+.selector {
     display: flex;
     flex-flow: row wrap;
     justify-content: center;
     width: 100%;
 }
 
-.customizer-bar .selector span {
+.selector span {
     text-align: center;
     padding-left: 9px;
     padding-right: 9px;
@@ -55,14 +73,26 @@ body {
     border-radius: 99999px;
 }
 
-.customizer-bar .selector .selected {
+.selector .selected {
     background-color: #bbbbbb;
 }
 
-.customizer-bar .selector .unselected:hover {
+.selector .unselected:hover {
     background-color: #cccccc;
 }
 
+.selector .disabled {
+    color: #bbbbbb;
+}
+/**
+ * @}
+ */
+
+ /**
+  * Level Selector styling
+  *
+  * @{
+  */
 .level-selector {
     border-right: 2px solid black;
     margin-right: 10px;
@@ -88,6 +118,18 @@ body {
     background-color: #cccccc;
 }
 
+.level-selector .disabled {
+    color: #bbbbbb;
+}
+/**
+ * @}
+ */
+
+/**
+ * Character Sheet styling
+ *
+ * @{
+ */
 .character-sheet .ability-table {
     border: 1px solid black;
     border-spacing: 0;
@@ -110,6 +152,9 @@ body {
     text-align: left;
     padding: 5px;
 }
+/**
+ * @}
+ */
 
 .hover-container {
     position: relative;

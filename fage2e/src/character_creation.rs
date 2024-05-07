@@ -121,38 +121,53 @@ impl Advancement for AbilityDetermination {
     fn as_any(&self) -> &dyn std::any::Any { self }
 }
 
-/// Common logic for applying the user's initial weapon group training selection.
-///
-/// The parameters for this are per-class.
-///
-/// Arguments:
-/// * char: The character to apply the user's selection to.
-/// * choose_between: The valid weapon group selections.
-/// * choices: The user's choices.
-///
-/// Return:
-/// * Ok(true) if all selections were made without errors.
-/// * Ok(false) if any selections were not made.
-/// * Err() if the user made invalid selections.
-pub fn apply_initial_weapon_group_selection(
-    char: &mut Character,
-    choose_between: &[WeaponGroup],
-    choices: &[Option<WeaponGroup>],
-) -> Result<bool, ()> {
-    // Apply the player's choices, keeping track of whether there were any unselected
-    // choices.
-    let mut any_unselected = false;
-    for maybe_weapon_group in choices {
-        let weapon_group = match maybe_weapon_group {
-            None => {any_unselected = true; continue; },
-            Some(w) => w,
-        };
-        // It's an error if the user selects something outside the valid selection set.
-        if !choose_between.contains(&weapon_group) {
-            return Err(());
-        }
-        char.mechanical_properties.weapon_training.insert(*weapon_group);
-    }
 
-    return Ok(!any_unselected);
+/// A generic interface to the player's initial weapon group options.
+///
+/// This is class-dependent.
+pub trait InitialWeaponGroups {
+    /// A static list of the weapon groups this class always gets training in.
+    fn always_get() -> &'static [WeaponGroup];
+
+    /// A static list of the weapon groups this class can choose to be trained in.
+    fn choose_between() -> &'static [WeaponGroup];
+
+    /// The number of items in `choose_between()` the player can select.
+    fn num_choices() -> usize;
+
+    /// The player's current choices.
+    fn choices(&self) -> &[Option<WeaponGroup>];
+
+    /// Mutable reference to the player's current choices.
+    fn choices_mut(&mut self) -> &mut [Option<WeaponGroup>];
+}
+
+impl<T: InitialWeaponGroups> LeafNodeAdvancement for T {
+    fn apply(&self, char: &mut Character) -> Result<bool, ()> {
+        // Apply the always-get training.
+        for weapon_group in Self::always_get() {
+            char.mechanical_properties.weapon_training.insert(*weapon_group);
+        }
+
+        // Apply the player's choices, keeping track of whether there were any
+        // unselected choices or errors.
+        let mut any_unselected = false;
+        let mut any_err = false;
+        for maybe_weapon_group in self.choices() {
+            let weapon_group = match maybe_weapon_group {
+                None => { any_unselected = true; continue; },
+                Some(w) => w,
+            };
+
+            // It's an error if the user selects something outside the valid selection set.
+            if !Self::choose_between().contains(&weapon_group) {
+                any_err = true;
+                continue;
+            }
+
+            char.mechanical_properties.weapon_training.insert(*weapon_group);
+        }
+
+        return if any_err { Err(()) } else { Ok(!any_unselected) };
+    }
 }

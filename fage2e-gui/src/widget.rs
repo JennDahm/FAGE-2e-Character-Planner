@@ -28,3 +28,36 @@ pub fn Selector<T: Copy + PartialEq + std::fmt::Display + 'static>(
         }
     }
 }
+
+/// A widget for selecting a number of options.
+#[component]
+pub fn MultiSelector<T: Copy + PartialEq + std::fmt::Display + 'static>(
+    options: ReadOnlySignal<Vec<T>>, selections: Signal<Vec<T>>, max_selections: ReadOnlySignal<usize>
+) -> Element
+{
+    rsx! {
+        div {
+            class: "selector",
+            for option in options() {
+                span {
+                    class: if (*selections.read()).contains(&option) {
+                        "selected"
+                    } else if (*selections.read()).len() >= max_selections() {
+                        "disabled"
+                    } else {
+                        "unselected"
+                    },
+                    onclick: move |_| {
+                        let idx = (*selections.read()).iter().position(|&x| x == option);
+                        if let Some(idx) = idx {
+                            (*selections.write()).remove(idx);
+                        } else if (*selections.read()).len() < max_selections() {
+                            (*selections.write()).push(option);
+                        }
+                    },
+                    "{option}"
+                }
+            }
+        }
+    }
+}
