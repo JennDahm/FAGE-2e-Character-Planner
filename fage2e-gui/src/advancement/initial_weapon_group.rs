@@ -42,7 +42,7 @@ pub fn InitialWeaponGroups<T: fage2e::InitialWeaponGroups + PartialEq + Clone + 
             div {
                 class: "selector",
                 for option in T::always_get() {
-                    span { class: "selected", "{option}" }
+                    span { class: "pressable pressed", "{option}" }
                 }
             }
         }

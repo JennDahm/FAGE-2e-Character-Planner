@@ -49,18 +49,13 @@ body {
  */
 
 /**
- * Selector/MultiSelector widget styling
+ * Clickable styling
+ *
+ * This is used for selectors and buttons.
  *
  * @{
  */
-.selector {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
-    width: 100%;
-}
-
-.selector span {
+.pressable {
     text-align: center;
     padding-left: 9px;
     padding-right: 9px;
@@ -71,18 +66,33 @@ body {
     border: 1px solid #bbbbbb;
     /* Dumb trick to get as big a circular radius as we can get. */
     border-radius: 99999px;
-}
 
-.selector .selected {
-    background-color: #bbbbbb;
+    &.pressed {
+        background-color: #bbbbbb;
+    }
+    &.unpressed:hover {
+        background-color: #cccccc;
+    }
+    &.disabled {
+        color: #bbbbbb;
+    }
 }
+/**
+ * @}
+ */
 
-.selector .unselected:hover {
-    background-color: #cccccc;
-}
-
-.selector .disabled {
-    color: #bbbbbb;
+/**
+ * Selector/MultiSelector widget styling
+ *
+ * These widgets use the `pressable` style for the selectable elements.
+ *
+ * @{
+ */
+.selector {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    width: 100%;
 }
 /**
  * @}

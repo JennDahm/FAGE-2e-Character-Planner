@@ -11,9 +11,10 @@ pub fn Selector<T: Copy + PartialEq + std::fmt::Display + 'static>(
             class: "selector",
             for option in options() {
                 span {
+                    class: "pressable",
                     class: if *selection.read() == Some(option) {
-                        "selected"
-                    } else { "unselected" },
+                        "pressed"
+                    } else { "unpressed" },
                     onclick: move |_| {
                         if *selection.read() == Some(option) {
                             selection.set(None);
@@ -40,12 +41,13 @@ pub fn MultiSelector<T: Copy + PartialEq + std::fmt::Display + 'static>(
             class: "selector",
             for option in options() {
                 span {
+                    class: "pressable",
                     class: if (*selections.read()).contains(&option) {
-                        "selected"
+                        "pressed"
                     } else if (*selections.read()).len() >= max_selections() {
                         "disabled"
                     } else {
-                        "unselected"
+                        "unpressed"
                     },
                     onclick: move |_| {
                         let idx = (*selections.read()).iter().position(|&x| x == option);
