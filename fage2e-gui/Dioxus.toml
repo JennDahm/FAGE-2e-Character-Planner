@@ -1,7 +1,7 @@
 [application]
 
 # App (Project) Name
-name = "dioxus-test"
+name = "FAGE 2nd Edition Character Creator"
 
 # Dioxus App Default Platform
 # desktop, web

@@ -63,3 +63,28 @@ pub fn MultiSelector<T: Copy + PartialEq + std::fmt::Display + 'static>(
         }
     }
 }
+
+/// A reusable button widget.
+///
+/// This button does not latch.
+#[component]
+pub fn Button(text: String, disabled: bool, onclick: EventHandler<MouseEvent>) -> Element {
+    let mut pressed = use_signal(|| false);
+    rsx! {
+        span {
+            class: "pressable",
+            class: if disabled {
+                "disabled"
+            } else if pressed() {
+                "pressed"
+            } else {
+                "unpressed"
+            },
+            onmousedown: move |_| { pressed.set(true); },
+            onmouseup: move |_| { pressed.set(false); },
+            onmouseleave: move |_| { pressed.set(false); },
+            onclick: move |event| { if !disabled { onclick(event); } },
+            "{text}"
+        }
+    }
+}
