@@ -5,6 +5,7 @@ use fage2e;
 mod ability_determination;
 mod class_selection;
 mod envoy;
+mod health;
 mod initial_weapon_group;
 mod mage;
 mod rogue;
@@ -12,6 +13,7 @@ mod warrior;
 
 pub use ability_determination::*;
 pub use class_selection::*;
+pub use health::*;
 pub use initial_weapon_group::*;
 
 #[component]

@@ -3,6 +3,9 @@
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
+#[cfg(feature = "rand")]
+use rand::{thread_rng, Rng};
+
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[allow(non_camel_case_types)]
@@ -32,6 +35,12 @@ impl Dice {
 
     pub fn max_value(&self) -> i16 {
         (self.size() as i16) * (self.count() as i16)
+    }
+
+    /// Roll a single die of this size.
+    #[cfg(feature = "rand")]
+    pub fn roll_single(&self) -> u8 {
+        thread_rng().gen_range(1..=self.size())
     }
 }
 

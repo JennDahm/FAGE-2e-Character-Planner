@@ -6,7 +6,7 @@ use std::cmp::max;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
-use crate::{Character, Ability, Focus, FocusLevel};
+use crate::{Ability, Character, Dice, Focus, FocusLevel};
 
 /// A generic character advancement.
 ///
@@ -117,14 +117,42 @@ pub struct DiceBasedHealthAdvancement {
     pub roll_result: Option<u8>,
 }
 
+impl DiceBasedHealthAdvancement {
+    /// The dice roll to use for this advancement.
+    pub fn dice() -> Dice {
+        Dice::d6(1)
+    }
+
+    /// The total advancement value, considering the minimum.
+    ///
+    /// NOTE: This does not check that the roll value itself was valid.
+    ///
+    /// Returns:
+    /// * Ok(val) if no coercion happened.
+    /// * Err(val) if the value was below the minimum advancement.
+    pub fn calculated(&self, con: i8) -> Result<u8, u8> {
+        let total = con + self.roll_result.unwrap_or(0) as i8;
+        if total < 1 {
+            Err(1)
+        } else {
+            Ok(total as u8)
+        }
+    }
+}
+
 impl LeafNodeAdvancement for DiceBasedHealthAdvancement {
     fn apply(&self, char: &mut Character) -> Result<bool, ()> {
         let roll = match self.roll_result {
             None => return Ok(false),
             Some(v) => v as i8,
         };
-        if 0 < roll && roll <= 6 {
-            let total = max(roll + char.mechanical_properties.abilities.get(Ability::Constitution).score, 1);
+        let dice = Self::dice();
+        if dice.min_value() <= roll as i16 && roll as i16 <= dice.max_value() {
+            let total = self.calculated(char.mechanical_properties.abilities.get(Ability::Constitution).score);
+            let total = match total {
+                Ok(v) => v,
+                Err(v) => v,
+            };
             char.mechanical_properties.max_health += total as u16;
             char.status.health += total as u16;
             Ok(true)
