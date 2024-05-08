@@ -40,7 +40,7 @@ impl Advancement for Level1Selections {
 }
 
 /// The initial weapon group selection for this class.
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct WeaponGroupSelection {
     pub choices_: [Option<WeaponGroup>; 0],
@@ -68,11 +68,5 @@ impl InitialWeaponGroups for WeaponGroupSelection {
 
     fn choices_mut(&mut self) -> &mut [Option<WeaponGroup>] {
         &mut self.choices_
-    }
-}
-
-impl PartialEq for WeaponGroupSelection {
-    fn eq(&self, other: &Self) -> bool {
-        self.choices_ == other.choices_
     }
 }

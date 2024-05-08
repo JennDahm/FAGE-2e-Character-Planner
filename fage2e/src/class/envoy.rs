@@ -45,7 +45,7 @@ impl Advancement for Level1Selections {
 pub const STARTING_WEAPON_GROUPS_NUM_CHOICES: usize = 3;
 
 /// The initial weapon group selection for this class.
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone, Default, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct WeaponGroupSelection {
     pub choices_: [Option<WeaponGroup>; STARTING_WEAPON_GROUPS_NUM_CHOICES],
@@ -81,10 +81,3 @@ impl InitialWeaponGroups for WeaponGroupSelection {
         &mut self.choices_
     }
 }
-
-impl PartialEq for WeaponGroupSelection {
-    fn eq(&self, other: &Self) -> bool {
-        self.choices_ == other.choices_
-    }
-}
-

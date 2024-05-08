@@ -47,7 +47,7 @@ pub fn CustomizerBar(mut character: Signal<fage2e::Character>) -> Element
     let mut level_select = use_signal(|| 1u8);
     use_effect(move || {
         character.set(match level_select() {
-            lvl if lvl == 1 => { character_levels[0]() }
+            lvl if lvl == 1 => { character_levels[(lvl - 1) as usize]() }
             // We should never hit this, but just in case...
             _ => { level0_character() }
         });
