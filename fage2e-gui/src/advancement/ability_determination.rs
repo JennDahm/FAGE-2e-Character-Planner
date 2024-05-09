@@ -75,7 +75,7 @@ pub fn AbilityDetermination(mut abilities: Signal<fage2e::AbilityDetermination>)
     });
 
     rsx! {
-        h4 { class: "section", "Initial Abilities" }
+        h4 { class: "section-header", "Initial Abilities" }
         match *abilities.read() {
             fage2e::AbilityDetermination::Manual(_) => rsx! {
                 ManuallyEnterAbilities { abilities: manual_abilities }

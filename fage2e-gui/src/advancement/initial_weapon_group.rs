@@ -36,7 +36,7 @@ pub fn InitialWeaponGroups<T: fage2e::InitialWeaponGroups + PartialEq + Clone + 
 
     use crate::widget::MultiSelector;
     rsx! {
-        h4 { class: "section", "Weapon Training" }
+        h4 { class: "section-header", "Weapon Training" }
         if T::always_get().len() > 0 {
             p { class: "label", "Always get:" }
             div {

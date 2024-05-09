@@ -6,6 +6,7 @@ mod advancement;
 mod character_sheet;
 mod customizer_bar;
 mod level;
+mod styling;
 mod util;
 mod widget;
 

@@ -1,10 +1,13 @@
 use dioxus::prelude::*;
 use strum::IntoEnumIterator;
 
-use fage2e;
+use fage2e::{self, Advancement};
 
 #[component]
-pub fn Level1ClassSelections(mut class_selections: Signal<fage2e::Level1ClassSelections>) -> Element {
+pub fn Level1ClassSelections(
+    mut class_selections: Signal<fage2e::Level1ClassSelections>,
+    character: ReadOnlySignal<fage2e::Character>,
+) -> Element {
     // Set up signals for the sub-advancement values.
     let envoy = use_signal(move || {
         match &*class_selections.read() {
@@ -52,21 +55,35 @@ pub fn Level1ClassSelections(mut class_selections: Signal<fage2e::Level1ClassSel
         });
     });
 
+    // Set up an effect to produce character information for the class-specific selections
+    // and to determine class selection completeness.
+    let mut selection_status = use_signal(|| Result::<bool, ()>::Ok(false));
+    let mut subcharacter = use_signal(fage2e::Character::new);
+    use_effect(move || {
+        let mut character = character();
+        selection_status.set((*class_selections.read()).apply_self(&mut character));
+        subcharacter.set(character);
+    });
+
     use crate::widget::Selector;
     use crate::advancement::envoy::Level1Selections as EnvoyLevel1Selections;
     use crate::advancement::mage::Level1Selections as MageLevel1Selections;
     use crate::advancement::rogue::Level1Selections as RogueLevel1Selections;
     use crate::advancement::warrior::Level1Selections as WarriorLevel1Selections;
+    use crate::styling::class_for_completeness;
 
     rsx! {
-        h4 { class: "section", "Class Selection" }
-        Selector { options, selection }
+        div {
+            class: class_for_completeness(selection_status()),
+            h4 { class: "section-header", "Class Selection" }
+            Selector { options, selection }
+        }
         match selection() {
             None => None,
-            Some(fage2e::Class::Envoy) => rsx! { EnvoyLevel1Selections { selections: envoy } },
-            Some(fage2e::Class::Mage) => rsx! { MageLevel1Selections { selections: mage } },
-            Some(fage2e::Class::Rogue) => rsx! { RogueLevel1Selections { selections: rogue } },
-            Some(fage2e::Class::Warrior) => rsx! { WarriorLevel1Selections { selections: warrior } },
+            Some(fage2e::Class::Envoy) => rsx! { EnvoyLevel1Selections { selections: envoy, character: subcharacter } },
+            Some(fage2e::Class::Mage) => rsx! { MageLevel1Selections { selections: mage, character: subcharacter } },
+            Some(fage2e::Class::Rogue) => rsx! { RogueLevel1Selections { selections: rogue, character: subcharacter } },
+            Some(fage2e::Class::Warrior) => rsx! { WarriorLevel1Selections { selections: warrior, character: subcharacter } },
         }
     }
 }

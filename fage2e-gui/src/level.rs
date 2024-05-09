@@ -33,7 +33,8 @@ pub fn Level1(character: ReadOnlySignal<fage2e::Character>, mut level1: Signal<f
     // Set up signals for the sub-advancement states.
     let mut name_status = use_signal(|| Result::<bool, ()>::Ok(false));
     let mut abilities_status = use_signal(|| Result::<bool, ()>::Ok(false));
-    // TODO: Handle class selections...
+    let mut class_selections_character = use_signal(fage2e::Character::new);
+    let mut health_status = use_signal(|| Result::<bool, ()>::Ok(false));
 
     // Set up a signal for communicating constitution.
     let mut constitution = use_signal(|| 0);
@@ -47,8 +48,11 @@ pub fn Level1(character: ReadOnlySignal<fage2e::Character>, mut level1: Signal<f
         let _ = level1.apply_self(&mut character);
         name_status.set(level1.name.apply_all(&mut character));
         abilities_status.set(level1.abilities.apply_all(&mut character));
+
+        class_selections_character.set(character.clone());
         let _ = level1.class.apply_all(&mut character);
-        let _ = level1.health.apply_all(&mut character);
+
+        health_status.set(level1.health.apply_all(&mut character));
 
         constitution.set(character.mechanical_properties.abilities.get(fage2e::Ability::Constitution).score);
 
@@ -59,12 +63,22 @@ pub fn Level1(character: ReadOnlySignal<fage2e::Character>, mut level1: Signal<f
     use crate::advancement::AbilityDetermination;
     use crate::advancement::Level1ClassSelections;
     use crate::advancement::DiceBasedHealthAdvancement;
+    use crate::styling::class_for_completeness;
 
     rsx! {
         h3 { class: "title", "Level 1" }
-        SelectName { name }
-        AbilityDetermination { abilities }
-        Level1ClassSelections { class_selections }
-        DiceBasedHealthAdvancement { advancement: health, constitution }
+        div {
+            class: class_for_completeness(name_status()),
+            SelectName { name }
+        }
+        div {
+            class: class_for_completeness(abilities_status()),
+            AbilityDetermination { abilities }
+        }
+        Level1ClassSelections { class_selections, character: class_selections_character }
+        div {
+            class: class_for_completeness(health_status()),
+            DiceBasedHealthAdvancement { advancement: health, constitution }
+        }
     }
 }

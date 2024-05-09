@@ -1,9 +1,21 @@
+/**
+ * Global variables
+ */
+:root {
+    /** Colors */
+    --main-bg-color: #eeeeee;
+    --highlight-color: #bbbbbb;
+    --hover-highlight-color: #cccccc;
+
+    --customizer-bar-padding: 10px;
+}
+
 html, body {
     height: 100%;
 }
 
 body {
-    background-color: #eeeeee;
+    background-color: var(--main-bg-color);
     margin: 0;
 }
 
@@ -23,8 +35,8 @@ body {
  */
 .customizer-bar {
     border-right: 2px solid black;
-    margin-right: 10px;
-    padding-right: 10px;
+    padding-left: var(--customizer-bar-padding);
+    padding-right: var(--customizer-bar-padding);
 
     width: 200px;
     max-width: 200px;
@@ -36,7 +48,7 @@ body {
     margin-block-start: 0em;
 }
 
-.customizer-bar .section {
+.customizer-bar .section-header {
     margin-block-end: 0.25em;
 }
 
@@ -49,7 +61,60 @@ body {
  */
 
 /**
- * Clickable styling
+ * Error/Incomplete Section highlighting.
+ *
+ * @{
+ */
+.incomplete {
+    background-color: rgb(198, 241, 255);
+}
+
+.incomplete .section-header::after {
+    content: url('info-16x16.png');
+    width: 16px;
+    height: 16px;
+    margin-left: 0.5em;
+}
+
+.customizer-bar .incomplete {
+    /*
+     * Trick to get highlighting across the whole width of the customizer bar
+     * without forcing every individual sub-element to have the right padding.
+     */
+    margin-left: calc(-1 * var(--customizer-bar-padding));
+    margin-right: calc(-1 * var(--customizer-bar-padding));
+    padding-left: var(--customizer-bar-padding);
+    padding-right: var(--customizer-bar-padding);
+}
+
+.error {
+    /* background-color: lightcoral; */
+    background-color: rgb(255, 178, 178);
+}
+
+.error .section-header::after {
+    content: url('error-16x16.png');
+    width: 16px;
+    height: 16px;
+    margin-left: 0.5em;
+}
+
+.customizer-bar .error {
+    /*
+     * Trick to get highlighting across the whole width of the customizer bar
+     * without forcing every individual sub-element to have the right padding.
+     */
+    margin-left: calc(-1 * var(--customizer-bar-padding));
+    margin-right: calc(-1 * var(--customizer-bar-padding));
+    padding-left: var(--customizer-bar-padding);
+    padding-right: var(--customizer-bar-padding);
+}
+/**
+ * @}
+ */
+
+/**
+ * Clickable widget styling
  *
  * This is used for selectors and buttons.
  *
@@ -64,18 +129,18 @@ body {
     margin: 2px;
     display: inline-block;
 
-    border: 1px solid #bbbbbb;
+    border: 1px solid var(--highlight-color);
     /* Dumb trick to get as big a circular radius as we can get. */
     border-radius: 99999px;
 
     &.pressed {
-        background-color: #bbbbbb;
+        background-color: var(--highlight-color);
     }
     &.unpressed:hover {
-        background-color: #cccccc;
+        background-color: var(--hover-highlight-color);
     }
     &.disabled {
-        color: #bbbbbb;
+        color: var(--highlight-color);
     }
 }
 /**
@@ -106,7 +171,6 @@ body {
   */
 .level-selector {
     border-right: 2px solid black;
-    margin-right: 10px;
 
     display: flex;
     flex-direction: column;
@@ -122,15 +186,15 @@ body {
 }
 
 .level-selector .selected {
-    background-color: #bbbbbb;
+    background-color: var(--highlight-color);
 }
 
 .level-selector .unselected:hover {
-    background-color: #cccccc;
+    background-color: var(--hover-highlight-color);
 }
 
 .level-selector .disabled {
-    color: #bbbbbb;
+    color: var(--highlight-color);
 }
 /**
  * @}
@@ -141,6 +205,10 @@ body {
  *
  * @{
  */
+.character-sheet {
+    padding-left: 10px;
+}
+
 .character-sheet .ability-table {
     border: 1px solid black;
     border-spacing: 0;

@@ -19,7 +19,7 @@ pub use initial_weapon_group::*;
 #[component]
 pub fn SelectName(mut name: Signal<fage2e::SelectName>) -> Element {
     rsx! {
-        h4 { class: "section", "Character Name" }
+        h4 { class: "section-header", "Character Name" }
         input {
             r#type: "text",
             // For live update:

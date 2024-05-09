@@ -12,7 +12,7 @@ pub fn DiceBasedHealthAdvancement(
     use crate::widget::Button;
 
     rsx! {
-        h4 { class: "section", "Health Advancement" }
+        h4 { class: "section-header", "Health Advancement" }
         p {
             class: "label",
             "CON ({constitution()}) + "
