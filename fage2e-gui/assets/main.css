@@ -212,17 +212,20 @@ body {
 .character-sheet .ability-table {
     border: 1px solid black;
     border-spacing: 0;
+    border-collapse: collapse;
+    width: 15em;
 }
 
 .character-sheet .ability-table .ability-name {
     border: 1px solid black;
     text-align: left;
     padding: 5px;
+    font-size: 0.85em;
 }
 
 .character-sheet .ability-table .ability-score {
     border: 1px solid black;
-    min-width: 2em;
+    width: 2em;
     text-align: center;
 }
 
@@ -230,6 +233,29 @@ body {
     border: 1px solid black;
     text-align: left;
     padding: 5px;
+    height: 1em;
+}
+
+.character-sheet .stat-table {
+    border: 1px solid black;
+    border-spacing: 0;
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 10px;
+
+    text-align: center;
+
+    tr {
+        border: 1px solid black;
+    }
+    .heading {
+        background-color: black;
+        color: var(--main-bg-color);
+        font-size: 0.75em;
+    }
+    th, td {
+        padding: 5px;
+    }
 }
 /**
  * @}
