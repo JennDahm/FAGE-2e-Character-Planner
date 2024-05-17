@@ -9,6 +9,7 @@ use serde::{Deserialize, Serialize};
 use crate::{
     Ability,
     AbilityScores,
+    Ancestry,
     Class,
     Focus,
     FocusLevel,
@@ -40,7 +41,8 @@ pub struct CharacterMechanicalProperties {
     /// The character's level. Valid values are 1-20.
     pub level: u8,
 
-    // TODO: race
+    /// The character's ancestry, if they've selected one.
+    pub ancestry: Option<Ancestry>,
 
     /// The character's class, if they've selected one.
     pub class: Option<Class>,
@@ -123,6 +125,7 @@ impl Character {
             mechanical_properties: CharacterMechanicalProperties {
                 level: 0,
                 class: None,
+                ancestry: None,
                 abilities: AbilityScores::new(),
                 focuses: HashMap::new(),
                 weapon_training: HashSet::new(),

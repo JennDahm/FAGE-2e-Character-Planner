@@ -14,6 +14,7 @@ pub fn CharacterSheet(character: ReadOnlySignal<Character>) -> Element {
     let bgrnd = character_ref.flavor.background.clone().unwrap_or("".to_owned());
     let social_class = character_ref.flavor.social_class.clone().unwrap_or("".to_owned());
     let class = character_ref.mechanical_properties.class.clone().map(|c| c.to_string()).unwrap_or("".to_owned());
+    let ancestry = character_ref.mechanical_properties.ancestry.clone().map(|a| a.to_string()).unwrap_or("".to_owned());
     rsx! {
         div {
             class: "character-sheet",
@@ -34,7 +35,7 @@ pub fn CharacterSheet(character: ReadOnlySignal<Character>) -> Element {
                     p {
                         b {"Level:"} " {character_ref.mechanical_properties.level}" br {}
                         b {"Class:"} " {class}" br {}
-                        b {"Race:"} " TODO" br {}
+                        b {"Ancestry:"} " {ancestry}" br {}
                     }
                     CoreStats { character }
                     Powers { character }

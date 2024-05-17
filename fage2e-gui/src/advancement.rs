@@ -3,12 +3,14 @@ use dioxus::prelude::*;
 use fage2e;
 
 mod ability_determination;
+mod ancestry_selection;
 mod class;
 mod class_selection;
 mod health;
 mod initial_weapon_group;
 
 pub use ability_determination::*;
+pub use ancestry_selection::*;
 pub use class_selection::*;
 pub use health::*;
 pub use initial_weapon_group::*;

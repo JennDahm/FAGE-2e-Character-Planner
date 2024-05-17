@@ -27,6 +27,9 @@ pub fn Level1(character: ReadOnlySignal<fage2e::Character>, mut level1: Signal<f
     let class_selections = use_signal(move || { (*level1.read()).class.clone() });
     use_effect(move || { (*level1.write()).class = class_selections(); });
 
+    let ancestry_selections = use_signal(move || { (*level1.read()).ancestry.clone() });
+    use_effect(move || { (*level1.write()).ancestry = ancestry_selections(); });
+
     let health = use_signal(move || { (*level1.read()).health.clone() });
     use_effect(move || { (*level1.write()).health = health(); });
 
@@ -62,6 +65,7 @@ pub fn Level1(character: ReadOnlySignal<fage2e::Character>, mut level1: Signal<f
     use crate::advancement::SelectName;
     use crate::advancement::AbilityDetermination;
     use crate::advancement::Level1ClassSelections;
+    use crate::advancement::Level1AncestrySelections;
     use crate::advancement::DiceBasedHealthAdvancement;
     use crate::styling::class_for_completeness;
 
@@ -80,5 +84,7 @@ pub fn Level1(character: ReadOnlySignal<fage2e::Character>, mut level1: Signal<f
             class: class_for_completeness(health_status()),
             DiceBasedHealthAdvancement { advancement: health, constitution }
         }
+        // TODO: Make the right character
+        Level1AncestrySelections { ancestry_selections, character: class_selections_character}
     }
 }

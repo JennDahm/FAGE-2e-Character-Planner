@@ -1,5 +1,6 @@
 mod ability;
 mod advancement;
+mod ancestry;
 mod character;
 mod character_creation;
 mod class;
@@ -10,6 +11,7 @@ mod weapon;
 
 pub use ability::*;
 pub use advancement::*;
+pub use ancestry::*;
 pub use character::*;
 pub use character_creation::*;
 pub use class::*;

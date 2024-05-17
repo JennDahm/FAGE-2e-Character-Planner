@@ -38,8 +38,9 @@ body {
     padding-left: var(--customizer-bar-padding);
     padding-right: var(--customizer-bar-padding);
 
-    width: 200px;
-    max-width: 200px;
+    width: 210px;
+    min-width: 210px;
+    max-width: 210px;
 
     overflow-y: auto;
 }
