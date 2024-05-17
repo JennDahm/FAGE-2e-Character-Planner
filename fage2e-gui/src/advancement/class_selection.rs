@@ -66,10 +66,10 @@ pub fn Level1ClassSelections(
     });
 
     use crate::widget::Selector;
-    use crate::advancement::envoy::Level1Selections as EnvoyLevel1Selections;
-    use crate::advancement::mage::Level1Selections as MageLevel1Selections;
-    use crate::advancement::rogue::Level1Selections as RogueLevel1Selections;
-    use crate::advancement::warrior::Level1Selections as WarriorLevel1Selections;
+    use crate::advancement::class::envoy::Level1Selections as EnvoyLevel1Selections;
+    use crate::advancement::class::mage::Level1Selections as MageLevel1Selections;
+    use crate::advancement::class::rogue::Level1Selections as RogueLevel1Selections;
+    use crate::advancement::class::warrior::Level1Selections as WarriorLevel1Selections;
     use crate::styling::class_for_completeness;
 
     rsx! {

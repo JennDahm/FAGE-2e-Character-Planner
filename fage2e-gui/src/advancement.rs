@@ -3,13 +3,10 @@ use dioxus::prelude::*;
 use fage2e;
 
 mod ability_determination;
+mod class;
 mod class_selection;
-mod envoy;
 mod health;
 mod initial_weapon_group;
-mod mage;
-mod rogue;
-mod warrior;
 
 pub use ability_determination::*;
 pub use class_selection::*;
