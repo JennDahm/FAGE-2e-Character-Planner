@@ -75,7 +75,7 @@ pub enum Level1ClassSelections {
     Warrior(warrior::Level1Selections),
 }
 
-/// The "Advancement" part of Class Selection just sets the character's class and base health.
+/// The "Advancement" part of Class Selection just sets the character's class.
 /// Class-specific selections are sub-advancements.
 impl Advancement for Level1ClassSelections {
     fn apply_self(&self, char: &mut Character) -> Result<bool, ()> {
@@ -86,11 +86,6 @@ impl Advancement for Level1ClassSelections {
             Self::Rogue(_) => Class::Rogue,
             Self::Warrior(_) => Class::Warrior,
         });
-        // Set base health
-        if let Some(class) = char.mechanical_properties.class {
-            char.mechanical_properties.max_health = class.initial_base_health() as u16;
-            char.status.health = class.initial_base_health() as u16;
-        }
         Ok(true)
     }
 
@@ -135,7 +130,7 @@ pub enum Level1AncestrySelections {
     Wildfolk(wildfolk::Level1Selections),
 }
 
-/// The "Advancement" part of Ancestry Selection just sets the character's ancestry and base speed.
+/// The "Advancement" part of Ancestry Selection just sets the character's ancestry.
 /// Ancestry-specific selections are sub-advancements.
 impl Advancement for Level1AncestrySelections {
     fn apply_self(&self, char: &mut Character) -> Result<bool, ()> {
@@ -151,10 +146,6 @@ impl Advancement for Level1AncestrySelections {
             Self::Orc(_) => Ancestry::Orc,
             Self::Wildfolk(_) => Ancestry::Wildfolk(None),
         });
-        // Set base speed
-        if let Some(ancestry) = char.mechanical_properties.ancestry {
-            char.mechanical_properties.base_speed_yards = ancestry.initial_base_speed();
-        }
         Ok(true)
     }
 

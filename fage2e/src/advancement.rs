@@ -6,7 +6,7 @@ use std::cmp::max;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
-use crate::{Ability, Character, Dice, Focus, FocusLevel};
+use crate::{Ability, AdditiveModifier, Character, Dice, Focus, FocusLevel, ModifierSource};
 
 /// A generic character advancement.
 ///
@@ -102,7 +102,12 @@ pub struct DefenseAdvancement {
 
 impl LeafNodeAdvancement for DefenseAdvancement {
     fn apply(&self, char: &mut Character) -> Result<bool, ()> {
-        char.mechanical_properties.base_defense += 1;
+        char.mechanical_properties.defense_advancements.push(
+            AdditiveModifier {
+                value: 1,
+                source: ModifierSource::Level(char.mechanical_properties.level),
+            }
+        );
         Ok(true)
     }
 }
@@ -130,12 +135,12 @@ impl DiceBasedHealthAdvancement {
     /// Returns:
     /// * Ok(val) if no coercion happened.
     /// * Err(val) if the value was below the minimum advancement.
-    pub fn calculated(&self, con: i8) -> Result<u8, u8> {
+    pub fn calculated(&self, con: i8) -> Result<i8, i8> {
         let total = con + self.roll_result.unwrap_or(0) as i8;
         if total < 1 {
             Err(1)
         } else {
-            Ok(total as u8)
+            Ok(total)
         }
     }
 }
@@ -144,17 +149,21 @@ impl LeafNodeAdvancement for DiceBasedHealthAdvancement {
     fn apply(&self, char: &mut Character) -> Result<bool, ()> {
         let roll = match self.roll_result {
             None => return Ok(false),
-            Some(v) => v as i8,
+            Some(v) => v as i16,
         };
         let dice = Self::dice();
-        if dice.min_value() <= roll as i16 && roll as i16 <= dice.max_value() {
+        if dice.min_value() <= roll && roll <= dice.max_value() {
             let total = self.calculated(char.mechanical_properties.abilities.get(Ability::Constitution).score);
             let total = match total {
                 Ok(v) => v,
                 Err(v) => v,
             };
-            char.mechanical_properties.max_health += total as u16;
-            char.status.health += total as u16;
+            char.mechanical_properties.health_advancements.push(
+                AdditiveModifier {
+                    value: total,
+                    source: ModifierSource::Level(char.mechanical_properties.level),
+                }
+            );
             Ok(true)
         }
         else {
@@ -173,8 +182,12 @@ pub struct ConstitutionBasedHealthAdvancement {
 impl LeafNodeAdvancement for ConstitutionBasedHealthAdvancement {
     fn apply(&self, char: &mut Character) -> Result<bool, ()> {
         let total = max(char.mechanical_properties.abilities.get(Ability::Constitution).score, 1);
-        char.mechanical_properties.max_health += total as u16;
-        char.status.health += total as u16;
+        char.mechanical_properties.health_advancements.push(
+            AdditiveModifier {
+                value: total,
+                source: ModifierSource::Level(char.mechanical_properties.level),
+            }
+        );
         Ok(true)
     }
 }

@@ -7,18 +7,7 @@ use std::collections::{HashMap, HashSet};
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    Ability,
-    AbilityScores,
-    Ancestry,
-    Class,
-    Focus,
-    FocusLevel,
-    Weapon,
-    WeaponGroup,
-    ModifierSource,
-    AdditiveModifier,
-    ModifierSet,
-    Value,
+    Ability, AbilityScores, AdditiveModifier, Ancestry, BaseValue, Class, Focus, FocusLevel, ModifierSet, ModifierSource, Value, Weapon, WeaponGroup
 };
 
 /// Non-mechanical properties of a character.
@@ -56,17 +45,14 @@ pub struct CharacterMechanicalProperties {
     /// What weapons the character is trained in.
     pub weapon_training: HashSet<WeaponGroup>,
 
-    /// The character's base speed in yards.
-    pub base_speed_yards: u8,
-
-    /// The character's base defense.
-    pub base_defense: u8,
-
     /// The character's base armor rating.
     pub base_armor: u8,
 
-    /// The character's max health.
-    pub max_health: u16,
+    /// The health advancements the character has earned over the levels.
+    pub health_advancements: Vec<AdditiveModifier>,
+
+    /// The defense advancements the character has earned over the levels.
+    pub defense_advancements: Vec<AdditiveModifier>,
 
     // TODO: Talents
     // TODO: Specializations
@@ -129,10 +115,9 @@ impl Character {
                 abilities: AbilityScores::new(),
                 focuses: HashMap::new(),
                 weapon_training: HashSet::new(),
-                base_speed_yards: 0,
-                base_defense: 10,
                 base_armor: 0,
-                max_health: 0,
+                health_advancements: Vec::new(),
+                defense_advancements: Vec::new(),
             },
             equipment: CharacterEquipment {
                 weapons: Vec::new(),
@@ -144,28 +129,63 @@ impl Character {
         }
     }
 
+    /// The character's maximum health.
+    pub fn max_health(&self) -> Value {
+        let modifiers = ModifierSet {
+            override_: None,
+            additive: self.mechanical_properties.health_advancements.clone(),
+        };
+        if let Some(class) = self.mechanical_properties.class {
+            Value {
+                base: BaseValue {
+                    value: class.initial_base_health() as i16,
+                    source: ModifierSource::Class(class),
+                },
+                modifiers
+            }
+        }
+        else {
+            Value {
+                base: BaseValue { value: 0, source: ModifierSource::Core },
+                modifiers
+            }
+        }
+    }
+
     /// The modifiers that go into the character's move speed.
-    pub fn speed_value(&self) -> Value {
+    pub fn speed_yards(&self) -> Value {
         // Per Chapter 1, Step 7 (Defense and Speed), speed is:
-        //  base speed + dexterity - armor penalty
+        //   base speed (from ancestry) + dexterity - armor penalty
         // TODO: Armor penalty
-        Value {
-            base: self.mechanical_properties.base_speed_yards as i16,
-            modifiers: ModifierSet {
-                override_: None,
-                additive: vec![
-                    AdditiveModifier {
-                        value: self.mechanical_properties.abilities.get(Ability::Dexterity).score,
-                        source: ModifierSource::Ability(Ability::Dexterity),
-                    },
-                ],
-            },
+        let modifiers = ModifierSet {
+            override_: None,
+            additive: vec![
+                AdditiveModifier {
+                    value: self.mechanical_properties.abilities.get(Ability::Dexterity).score,
+                    source: ModifierSource::Ability(Ability::Dexterity),
+                },
+            ],
+        };
+        if let Some(ancestry) = self.mechanical_properties.ancestry {
+            Value {
+                base: BaseValue {
+                    value: ancestry.initial_base_speed() as i16,
+                    source: ModifierSource::Ancestry(ancestry),
+                },
+                modifiers
+            }
+        }
+        else {
+            Value {
+                base: BaseValue { value: 0, source: ModifierSource::Core },
+                modifiers
+            }
         }
     }
 
     /// The character's move speed in yards.
     pub fn move_speed_yards(&self) -> u16 {
-        let speed = self.speed_value().final_value();
+        let speed = self.speed_yards().final_value();
 
         // Speed can't be less than 0.
         if speed < 0 { 0u16 } else { speed as u16 }
@@ -183,30 +203,35 @@ impl Character {
         (self.move_speed_yards() + 1) / 2
     }
 
-    /// The modifiers that go into the character's defense.
-    pub fn defense_value(&self) -> Value {
+    /// The character's defense.
+    pub fn defense(&self) -> Value {
         // Per Chapter 1, Step 7 (Defense and Speed), defense is:
-        //  base defense + dexterity + shield bonus
+        //   base defense + dexterity + shield bonus
         // TODO: Shield bonus
+        let mut modifiers = ModifierSet {
+            override_: None,
+            additive: self.mechanical_properties.defense_advancements.clone(),
+        };
+        modifiers.additive.push(
+            AdditiveModifier {
+                value: self.mechanical_properties.abilities.get(Ability::Dexterity).score,
+                source: ModifierSource::Ability(Ability::Dexterity),
+            }
+        );
         Value {
-            base: self.mechanical_properties.base_defense as i16,
-            modifiers: ModifierSet {
-                override_: None,
-                additive: vec![
-                    AdditiveModifier {
-                        value: self.mechanical_properties.abilities.get(Ability::Dexterity).score,
-                        source: ModifierSource::Ability(Ability::Dexterity),
-                    },
-                ],
-            },
+            base: BaseValue { value: 10, source: ModifierSource::Core },
+            modifiers
         }
     }
 
-    /// The character's defense.
-    pub fn defense(&self) -> u8 {
-        let defense = self.defense_value().final_value();
-
-        // Defense can't be less than 0.
-        if defense < 0 { 0u8 } else { defense as u8 }
+    /// The character's armor rating.
+    pub fn armor(&self) -> Value {
+        Value {
+            base: BaseValue { value: 0, source: ModifierSource::Core },
+            modifiers: ModifierSet {
+                override_: None,
+                additive: Vec::new(),
+            },
+        }
     }
 }

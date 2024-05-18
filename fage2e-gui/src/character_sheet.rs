@@ -117,9 +117,10 @@ fn CoreStats(character: ReadOnlySignal<Character>) -> Element {
     let character = character.read();
     let character = character.deref();
 
-    let speed_details = character.speed_value();
-
-    let defense_details = character.defense_value();
+    let max_health_details = character.max_health();
+    let speed_details = character.speed_yards();
+    let defense_details = character.defense();
+    let armor_details = character.armor();
 
     rsx! {
         table {
@@ -150,10 +151,12 @@ fn CoreStats(character: ReadOnlySignal<Character>) -> Element {
                     "{defense_details.final_value()}"
                 }
                 th {
-                    "todo"
+                    title: "{format_value_modifiers(&armor_details)}",
+                    "{armor_details.final_value()}"
                 }
                 th {
-                    "{character.status.health}/{character.mechanical_properties.max_health}"
+                    title: "{format_value_modifiers(&max_health_details)}",
+                    "{max_health_details.final_value()}"
                 }
             }
         }
@@ -342,37 +345,20 @@ fn RangeWeapons(character: ReadOnlySignal<Character>) -> Element {
 
 
 fn format_value_modifiers(value: &fage2e::Value) -> String {
-    let mut details = if let Some(override_) = value.modifiers.override_ {
-        format!("Base: {override_} (overridden by todo)")
+    let base = if let Some(override_) = &value.modifiers.override_ {
+        override_
     } else {
-        format!("Base: {}", value.base)
+        &value.base
     };
+    let mut details = format!("Base: {} ({})", base.value, base.source);
     for additive in value.modifiers.additive.iter() {
         if additive.value >= 0 {
-            details.push_str(
-                &format!(
-                    "\n+ {} ({})",
-                    additive.value,
-                    format_modifier_source(&additive.source),
-                )
+            details.push_str(&format!("\n+ {} ({})", additive.value, additive.source)
             );
         }
         else {
-            details.push_str(
-                &format!(
-                    "\n- {} ({})",
-                    -additive.value,
-                    format_modifier_source(&additive.source),
-                )
-            );
+            details.push_str(&format!("\n- {} ({})", -additive.value, additive.source));
         }
     }
     details
-}
-
-fn format_modifier_source(source: &fage2e::ModifierSource) -> String {
-    match source {
-        fage2e::ModifierSource::Ability(ability) => ability.to_string(),
-        fage2e::ModifierSource::Focus(focus) => focus.to_string(),
-    }
 }
