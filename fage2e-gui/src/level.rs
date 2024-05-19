@@ -79,11 +79,14 @@ pub fn Level1(character: ReadOnlySignal<fage2e::Character>, mut level1: Signal<f
             class: class_for_completeness(abilities_status()),
             AbilityDetermination { abilities }
         }
+        hr {}
         Level1ClassSelections { class_selections, character: class_selections_character }
+        hr {}
         div {
             class: class_for_completeness(health_status()),
             DiceBasedHealthAdvancement { advancement: health, constitution }
         }
+        hr {}
         // TODO: Make the right character
         Level1AncestrySelections { ancestry_selections, character: class_selections_character}
     }

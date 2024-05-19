@@ -13,7 +13,7 @@ pub fn Level1Selections(
     let weapon_groups = use_signal(|| (*selections.read()).weapon_groups.clone());
     use_effect(move || { (*selections.write()).weapon_groups = weapon_groups(); });
 
-    // Set up signals for the sub-advancment states.
+    // Set up signals for the sub-advancement states.
     let mut weapon_groups_status = use_signal(|| Result::<bool, ()>::Ok(false));
 
     // Set up an effect to update sub-advancement states.
