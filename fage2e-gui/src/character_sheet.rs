@@ -63,7 +63,6 @@ fn AbilityTable(character: ReadOnlySignal<Character>) -> Element {
         let base_name = focus.base_name();
         let list = focuses.get_mut(&ability).unwrap();
         match *level {
-            fage2e::FocusLevel::None => continue,
             fage2e::FocusLevel::SingleFocus => list.push(format!("{base_name}")),
             fage2e::FocusLevel::DoubleFocus => list.push(format!("{base_name}^2")),
         }

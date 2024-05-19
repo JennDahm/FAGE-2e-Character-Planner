@@ -367,9 +367,6 @@ impl std::fmt::Display for Focus {
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum FocusLevel {
-    /// No investment at all.
-    None,
-
     /// One level of investment.
     SingleFocus,
 

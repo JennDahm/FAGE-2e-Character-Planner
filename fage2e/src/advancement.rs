@@ -255,25 +255,24 @@ impl LeafNodeAdvancement for SecondaryAbilityAdvancement {
 
 
 fn advance_focus(char: &mut Character, focus: Focus) -> Result<(), ()> {
-    let current_level = *char.mechanical_properties.focuses.get(&focus)
-        .unwrap_or(&FocusLevel::None);
-
-    if current_level == FocusLevel::None {
+    if let Some(&current_level) = char.mechanical_properties.focuses.get(&focus) {
+        // Can't triple focus.
+        if current_level == FocusLevel::DoubleFocus {
+            Err(())
+        }
+        // You can double focus, but only starting at level 11.
+        else if char.mechanical_properties.level >= 11 {
+            char.mechanical_properties.focuses.insert(focus, FocusLevel::DoubleFocus);
+            Ok(())
+        }
+        // Otherwise you can't double focus yet.
+        else {
+            Err(())
+        }
+    }
+    else {
         char.mechanical_properties.focuses.insert(focus, FocusLevel::SingleFocus);
         Ok(())
-    }
-    // Can't triple focus.
-    else if current_level == FocusLevel::DoubleFocus {
-        Err(())
-    }
-    // You can double focus, but only starting at level 11.
-    else if char.mechanical_properties.level >= 11 {
-        char.mechanical_properties.focuses.insert(focus, FocusLevel::DoubleFocus);
-        Ok(())
-    }
-    // Otherwise you can't double focus yet.
-    else {
-        Err(())
     }
 }
 
