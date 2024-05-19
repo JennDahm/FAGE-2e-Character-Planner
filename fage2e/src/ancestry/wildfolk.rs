@@ -4,7 +4,7 @@
 use serde::{Deserialize, Serialize};
 use strum::EnumIter;
 
-use crate::{Advancement, Character, Focus, FocusLevel, LeafNodeAdvancement};
+use crate::{Advancement, Ancestry, Character, Focus, FocusLevel, LeafNodeAdvancement};
 
 #[derive(Debug, Copy, Clone, EnumIter, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
@@ -43,13 +43,21 @@ impl std::fmt::Display for Species {
     }
 }
 
+impl LeafNodeAdvancement for Option<Species> {
+    fn apply(&self, char: &mut Character) -> Result<bool, ()> {
+        char.mechanical_properties.ancestry = Some(Ancestry::Wildfolk(*self));
+        Ok(*self != None)
+    }
+}
+
 /// The initial selections the user must make for this ancestry.
 #[derive(Debug, Clone, Default)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Level1Selections {
-    // TODO: Wildfolk species
+    /// Wildfolk species selection
+    pub species: Option<Species>,
 
-    // Initial ability focus selection.
+    /// Initial ability focus selection.
     pub ability_focus: Option<AbilityFocusSelection>,
 
     // TODO: Wildfolk benefits
@@ -63,10 +71,12 @@ impl Advancement for Level1Selections {
     }
 
     fn foreach(&self, f: &mut dyn FnMut(&dyn Advancement)) {
+        f(&self.species);
         f(&self.ability_focus);
     }
 
     fn foreach_mut(&mut self, f: &mut dyn FnMut(&mut dyn Advancement)) {
+        f(&mut self.species);
         f(&mut self.ability_focus);
     }
 

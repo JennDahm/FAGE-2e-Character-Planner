@@ -10,7 +10,7 @@ use crate::{Advancement, Character, Focus, FocusLevel, LeafNodeAdvancement};
 #[derive(Debug, Clone, Default)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct Level1Selections {
-    // Initial ability focus selection.
+    /// Initial ability focus selection.
     pub ability_focus: Option<AbilityFocusSelection>,
 
     // TODO: Elf benefits
