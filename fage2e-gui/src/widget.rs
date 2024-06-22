@@ -64,6 +64,50 @@ pub fn MultiSelector<T: Copy + PartialEq + std::fmt::Display + 'static>(
     }
 }
 
+/// A widget for selecting a number of options, where some of those options may
+/// be disabled.
+#[component]
+pub fn DisableableMultiSelector<T: Copy + PartialEq + std::fmt::Display + 'static>(
+    options: ReadOnlySignal<Vec<T>>,
+    disabled_options: ReadOnlySignal<Vec<T>>,
+    selections: Signal<Vec<T>>,
+    max_selections: ReadOnlySignal<usize>,
+) -> Element
+{
+    rsx! {
+        div {
+            class: "selector",
+            for option in options() {
+                span {
+                    class: "pressable",
+                    class: if (*selections.read()).contains(&option) {
+                        "pressed"
+                    } else if (*disabled_options.read()).contains(&option) {
+                        "disabled"
+                    } else if (*selections.read()).len() >= max_selections() {
+                        "disabled"
+                    } else {
+                        "unpressed"
+                    },
+                    onclick: move |_| {
+                        let idx = (*selections.read()).iter().position(|&x| x == option);
+                        if let Some(idx) = idx {
+                            (*selections.write()).remove(idx);
+                        }
+                        else if (*disabled_options.read()).contains(&option) {
+                            // Do nothing if the option is disabled.
+                        }
+                        else if (*selections.read()).len() < max_selections() {
+                            (*selections.write()).push(option);
+                        }
+                    },
+                    "{option}"
+                }
+            }
+        }
+    }
+}
+
 /// A reusable button widget.
 ///
 /// This button does not latch.

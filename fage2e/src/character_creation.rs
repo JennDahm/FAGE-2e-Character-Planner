@@ -3,8 +3,9 @@
 
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
+use strum::IntoEnumIterator;
 
-use crate::{Character, Ability, AbilityScore, Advancement, LeafNodeAdvancement, WeaponGroup};
+use crate::{Character, Dice, Ability, AbilityScore, Advancement, LeafNodeAdvancement, WeaponGroup};
 
 /// Character name selection
 #[derive(Debug, Clone, Default)]
@@ -169,5 +170,128 @@ impl<T: InitialWeaponGroups> LeafNodeAdvancement for T {
         }
 
         return if any_err { Err(()) } else { Ok(!any_unselected) };
+    }
+}
+
+
+/// A generic interface to an ancestry's benefit choices.
+pub trait AncestryBenefit: std::fmt::Debug + std::fmt::Display + Clone + Copy + PartialEq + Sized + IntoEnumIterator {
+    /// The display name of this benefit.
+    fn display_name(&self) -> String;
+
+    /// For a given 2d6 roll, the corresponding benefit.
+    fn from_roll(roll: u16) -> Result<Self, ()>;
+
+    /// Whether this benefit counts as both choices when choosing manually.
+    fn counts_as_two(&self) -> bool;
+
+    /// Apply this benefit to the character.
+    ///
+    /// Returns whether the selection is complete.
+    fn apply(&self, char: &mut Character) -> bool;
+}
+
+/// The user's selection of ancestry benefits.
+#[derive(Debug, Clone, Copy, PartialEq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+pub struct AncestryBenefitSelections<B>
+    where B : AncestryBenefit
+{
+    pub selection1: Option<B>,
+    pub selection2: Option<B>,
+    pub selections_were_rolled: bool,
+}
+
+// For whatever reason, if we try to derive Default, it requires that B also
+// derive Default, which is generally undesirable.
+impl <B> Default for AncestryBenefitSelections<B>
+    where B : AncestryBenefit
+{
+    fn default() -> Self {
+        Self {
+            selection1: None,
+            selection2: None,
+            selections_were_rolled: false,
+        }
+    }
+}
+
+impl <B> AncestryBenefitSelections<B>
+    where B : std::fmt::Debug + Clone + Copy + PartialEq + AncestryBenefit
+{
+    /// Randomly determine the Draak benefits to use.
+    ///
+    /// The user will still have to make sub-selections if Magical Resistance is
+    /// rolled.
+    #[cfg(feature = "rand")]
+    pub fn roll() -> Self {
+        let selection1 = B::from_roll(Dice::d6(2).roll_all_sum()).unwrap();
+        let selection2 = loop {
+            let selection = B::from_roll(Dice::d6(2).roll_all_sum()).unwrap();
+            if selection != selection1 {
+                break selection;
+            }
+        };
+        Self {
+            selection1: Some(selection1),
+            selection2: Some(selection2),
+            selections_were_rolled: true,
+        }
+    }
+}
+
+impl <B> LeafNodeAdvancement for AncestryBenefitSelections<B>
+    where B : std::fmt::Debug + Clone + Copy + PartialEq + AncestryBenefit
+{
+    fn apply(&self, char: &mut Character) -> Result<bool, ()> {
+        // Apply the first selection, if it was selected.
+        if let Some(selection1) = self.selection1 {
+            let selection1_done = selection1.apply(char);
+
+            // The user can't select the same benefit twice.
+            if self.selection1 == self.selection2 {
+                return Err(());
+            }
+
+            // If this counts as two selections and the user didn't roll for
+            // their selections...
+            if selection1.counts_as_two() && !self.selections_were_rolled {
+                // ... then it's an error if the user made a second selection.
+                if self.selection2.is_some() {
+                    return Err(());
+                }
+                // Otherwise, the selections are done if the first selection
+                // is done.
+                else {
+                    return Ok(selection1_done);
+                }
+            }
+            // Otherwise...
+            else {
+                // ... apply the second selection, if it was selected.
+                if let Some(selection2) = self.selection2 {
+                    let selection2_done = selection2.apply(char);
+                    return Ok(selection1_done && selection2_done);
+                }
+                // Otherwise, the user isn't done.
+                else {
+                    return Ok(false);
+                }
+            }
+        }
+        // If there was no first selection...
+        else {
+            // ... apply the second selection, if it was selected.
+            if let Some(selection2) = self.selection2 {
+                let selection2_done = selection2.apply(char);
+                // The user is done IFF selection2 is done, selection2 counts as two
+                // benefits, AND the user did not roll for their selections.
+                return Ok(selection2_done && selection2.counts_as_two() && !self.selections_were_rolled);
+            }
+            // Otherwise, the user isn't done.
+            else {
+                return Ok(false);
+            }
+        }
     }
 }

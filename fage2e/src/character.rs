@@ -7,7 +7,7 @@ use std::collections::{HashMap, HashSet};
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    Ability, AbilityScores, AdditiveModifier, Ancestry, BaseValue, Class, Focus, FocusLevel, ModifierSet, ModifierSource, Value, Weapon, WeaponGroup
+    Ability, AbilityScores, AdditiveModifier, Ancestry, BaseValue, Class, Focus, FocusLevel, ModifierSet, ModifierSource, PowerDetails, Value, Weapon, WeaponGroup
 };
 
 /// Non-mechanical properties of a character.
@@ -45,18 +45,15 @@ pub struct CharacterMechanicalProperties {
     /// What weapons the character is trained in.
     pub weapon_training: HashSet<WeaponGroup>,
 
-    /// The character's base armor rating.
-    pub base_armor: u8,
-
     /// The health advancements the character has earned over the levels.
     pub health_advancements: Vec<AdditiveModifier>,
 
     /// The defense advancements the character has earned over the levels.
     pub defense_advancements: Vec<AdditiveModifier>,
 
-    // TODO: Talents
-    // TODO: Specializations
-    // TODO: Miscellaneous powers
+    /// Details about the various powers the character has.
+    pub powers: PowerDetails,
+
     // TODO: MP
     // TODO: Spells
 }
@@ -115,9 +112,9 @@ impl Character {
                 abilities: AbilityScores::new(),
                 focuses: HashMap::new(),
                 weapon_training: HashSet::new(),
-                base_armor: 0,
                 health_advancements: Vec::new(),
                 defense_advancements: Vec::new(),
+                powers: PowerDetails::default(),
             },
             equipment: CharacterEquipment {
                 weapons: Vec::new(),
@@ -230,7 +227,12 @@ impl Character {
             base: BaseValue { value: 0, source: ModifierSource::Core },
             modifiers: ModifierSet {
                 override_: None,
-                additive: Vec::new(),
+                additive: self.mechanical_properties.powers.iter().filter_map(|power| {
+                    power.armor_bonus().map(|bonus| AdditiveModifier {
+                        value: bonus,
+                        source: ModifierSource::Power(power.power()),
+                    })
+                }).collect(),
             },
         }
     }

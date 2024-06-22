@@ -3,7 +3,7 @@
 //!
 //! This is especially important for explaining to users where their numbers are coming from.
 
-use super::{Ability, Ancestry, Class, Focus, Dice, DiceWithMod};
+use super::{Ability, Ancestry, Class, Focus, Dice, DiceWithMod, Power};
 
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
@@ -18,6 +18,7 @@ pub enum ModifierSource {
     Core,
     Focus(Focus),
     Level(u8),
+    Power(Power),
 }
 
 impl std::fmt::Display for ModifierSource {
@@ -29,6 +30,7 @@ impl std::fmt::Display for ModifierSource {
             Self::Core => write!(f, "Core"),
             Self::Focus(focus) => focus.fmt(f),
             Self::Level(level) => write!(f, "Level {}", level),
+            Self::Power(power) => power.fmt(f),
         }
     }
 }

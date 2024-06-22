@@ -4,6 +4,7 @@ use fage2e;
 
 mod ability_determination;
 mod ancestry;
+mod ancestry_benefits;
 mod class;
 mod class_selection;
 mod health;

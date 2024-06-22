@@ -15,8 +15,12 @@ pub fn Level1Selections(
     use_effect(move || { (*selections.write()).ability_focus = ability_focus(); });
     let ability_focus_options = use_signal(|| fage2e::draak::AbilityFocusSelection::iter().collect());
 
+    let benefits = use_signal(|| (*selections.read()).benefits);
+    use_effect(move || { (*selections.write()).benefits = benefits(); });
+
     // Set up signals for the sub-advancement states.
     let mut ability_focus_status = use_signal(|| Result::<bool, ()>::Ok(false));
+    let mut benefits_status = use_signal(|| Result::<bool, ()>::Ok(false));
 
     // Set up an effect to update sub-advancement states.
     use_effect(move || {
@@ -25,16 +29,23 @@ pub fn Level1Selections(
         let selections = selections.deref();
 
         ability_focus_status.set(selections.ability_focus.apply_all(&mut character));
+        benefits_status.set(selections.benefits.apply_all(&mut character));
     });
 
     use crate::styling::class_for_completeness;
     use crate::widget::Selector;
+    use crate::advancement::ancestry_benefits::AncestryBenefitSelections;
 
     rsx! {
         div {
             class: class_for_completeness(ability_focus_status()),
             h4 { class: "section-header", "Select Ability Focus" }
             Selector { options: ability_focus_options, selection: ability_focus }
+        }
+        div {
+            class: class_for_completeness(benefits_status()),
+            h4 { class: "section-header", "Select Draak Benefits" }
+            AncestryBenefitSelections { benefits }
         }
     }
 }

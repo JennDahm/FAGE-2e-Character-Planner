@@ -4,7 +4,7 @@
 use serde::{Deserialize, Serialize};
 use strum::EnumIter;
 
-use crate::{Advancement, Character, Focus, FocusLevel, LeafNodeAdvancement};
+use crate::{Advancement, Character, DarkSightDetails, Focus, FocusLevel, LeafNodeAdvancement};
 
 /// The initial selections the user must make for this ancestry.
 #[derive(Debug, Clone, Default)]
@@ -20,8 +20,8 @@ pub struct Level1Selections {
 /// such as Dark Sight and available languages. Sub-advancements cover the user's
 /// choices.
 impl Advancement for Level1Selections {
-    fn apply_self(&self, _: &mut Character) -> Result<bool, ()> {
-        // TODO: Apply dark sight.
+    fn apply_self(&self, char: &mut Character) -> Result<bool, ()> {
+        char.mechanical_properties.powers.dark_sight = Some(DarkSightDetails {});
         Ok(true)
     }
 

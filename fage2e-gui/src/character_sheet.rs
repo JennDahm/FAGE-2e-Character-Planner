@@ -209,7 +209,14 @@ fn Powers(character: ReadOnlySignal<Character>) -> Element {
                     text_align: "left",
                     height: "10em",
                     vertical_align: "text-top",
-                    "TODO"
+                    ul {
+                        for power in (*character.read()).mechanical_properties.powers.iter() {
+                            li {
+                                title: "{power.description()}",
+                                "{power.name()}"
+                            }
+                        }
+                    }
                 }
             }
         }

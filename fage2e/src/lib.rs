@@ -7,6 +7,7 @@ mod class;
 mod level;
 mod modifier;
 mod numbers;
+mod power;
 mod weapon;
 
 pub use ability::*;
@@ -18,4 +19,5 @@ pub use class::*;
 pub use level::*;
 pub use modifier::*;
 pub use numbers::*;
+pub use power::*;
 pub use weapon::*;

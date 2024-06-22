@@ -42,6 +42,18 @@ impl Dice {
     pub fn roll_single(&self) -> u8 {
         thread_rng().gen_range(1..=self.size())
     }
+
+    /// Roll the number of dice specified.
+    #[cfg(feature = "rand")]
+    pub fn roll_all(&self) -> Vec<u8> {
+        (0..self.count()).into_iter().map(|_| self.roll_single()).collect()
+    }
+
+    /// Roll the number of dice specified and sum their results.
+    #[cfg(feature = "rand")]
+    pub fn roll_all_sum(&self) -> u16 {
+        self.roll_all().into_iter().fold(0, |acc, roll| acc + (roll as u16))
+    }
 }
 
 impl std::fmt::Display for Dice {
